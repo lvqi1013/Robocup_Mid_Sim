@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+    <name>nubot_description</name>
+    <version>1.0.0</version>
+    <description>Describes nubot model for Gazebo</description>
+    <maintainer email="1595642896@qq.com">lq</maintainer>
+    <license>TODO: License declaration</license>
+    <author email="abcgarden@126.com">Weijia Yao</author>
+
+    <!-- ROS 2 Python 构建工具 -->
+    <buildtool_depend>ament_python</buildtool_depend>
+    <!-- Gazebo Harmonic 对应的 ROS 2 仿真依赖 -->
+    <depend>ros_gz_sim</depend>
+    <depend>ros_gz_bridge</depend>
+
+    <!-- 机器人描述相关常用依赖（按需保留） -->
+    <exec_depend>urdf</exec_depend>
+    <exec_depend>xacro</exec_depend>
+
+    <test_depend>ament_copyright</test_depend>
+    <test_depend>ament_flake8</test_depend>
+    <test_depend>ament_pep257</test_depend>
+    <test_depend>python3-pytest</test_depend>
+
+    <export>
+        <build_type>ament_python</build_type>
+        <!-- 如果仍需通过 package.xml 声明资源路径（部分旧版插件可能依赖）
+        <gazebo_ros gazebo_model_path="${prefix}/models/" />
+        <gazebo_ros gazebo_media_path="${prefix}" /> -->
+    </export>
+</package>
