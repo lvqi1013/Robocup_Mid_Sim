@@ -1,0 +1,314 @@
+<?xml version="1.0"?>
+<!-- XML 声明：标准文件头 -->
+<!-- SDF 根标签：版本 1.11，适配 Gazebo Harmonic -->
+<sdf version="1.11">
+
+  <!-- 模型定义：RoboCup15_MSL_Goal
+       整个文件是一个【球门】模型 -->
+  <model name="RoboCup15_MSL_Goal">
+    <!-- static=true：静态模型，固定不动，不受物理力影响 -->
+    <static>true</static>
+    
+    <!-- ============================================== -->
+    <!-- 左侧门柱：垂直立柱 -->
+    <!-- ============================================== -->
+    <link name="left_post">      <!-- 连杆：左门柱 -->
+      <!-- 位姿：X Y Z 横滚 俯仰 偏航 -->
+      <pose>-0.0625 1.2625 0.5 0 0 0</pose>
+
+      <!-- 碰撞体：负责物理碰撞 -->
+      <collision name="collision">
+        <!-- 几何形状容器 -->
+        <geometry>
+          <!-- 立方体：长 宽 高 -->
+          <box>
+            <size>0.125 0.125 1.0</size>
+          </box>
+        </geometry>
+      </collision>
+
+      <!-- 视觉体：负责显示外观 -->
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.125 0.125 1.0</size>
+          </box>
+        </geometry>
+        <!-- 材质：纯白色，哑光 -->
+        <material>
+          <ambient>1 1 1 1</ambient>          <!-- 环境光色 -->
+          <diffuse>1 1 1 1</diffuse>          <!-- 漫反射色 -->
+          <specular>0.1 0.1 0.1 1</specular>          <!-- 高光 -->
+        </material>
+      </visual>
+    </link>
+
+    <!-- ============================================== -->
+    <!-- 右侧门柱：垂直立柱 -->
+    <!-- ============================================== -->
+    <link name="right_post">
+      <pose>-0.0625 -1.2625 0.5 0 0 0</pose>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.125 0.125 1.0</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.125 0.125 1.0</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>1 1 1 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </link>
+
+    <!-- ============================================== -->
+    <!-- 横梁：连接左右门柱顶部 -->
+    <!-- ============================================== -->
+    <link name="crossbar">
+      <pose>-0.0625 0 1.0625 0 0 0</pose>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.125 2.65 0.125</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.125 2.65 0.125</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>1 1 1 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </link>
+
+    <!-- ============================================== -->
+    <!-- 左下支撑：球门左侧底部支架 -->
+    <!-- ============================================== -->
+    <link name="left_support_horiz_lower">
+      <pose>0.25 1.2625 0.2 0 0 0</pose>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.5 0.125 0.4</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.5 0.125 0.4</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>1 1 1 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </link>
+
+    <!-- ============================================== -->
+    <!-- 右下支撑：球门右侧底部支架 -->
+    <!-- ============================================== -->
+    <link name="right_support_horiz_lower">
+      <pose>0.25 -1.2625 0.2 0 0 0</pose>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.5 0.125 0.4</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.5 0.125 0.4</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>1 1 1 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </link>
+
+    <!-- ============================================== -->
+    <!-- 中间支撑：球门后方中间支架 -->
+    <!-- ============================================== -->
+    <link name="center_support_horiz_lower">
+      <pose>0.55 0 0.2 0 0 0</pose>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.10 2.65 0.4</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.10 2.65 0.4</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>1 1 1 1</diffuse>
+          <specular>0.1 0.1 0.1 1</specular>
+        </material>
+      </visual>
+    </link>
+
+    <!-- ============================================== -->
+    <!-- 中间球网：球门主体网 -->
+    <!-- ============================================== -->
+    <link name="center_net">
+      <pose>0.5 0 0.7625 0 0 0</pose>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.01 2.525 0.725</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.01 2.525 0.725</size>
+          </box>
+        </geometry>
+        <material>
+          <!-- 半透明浅灰色 -->
+          <ambient>0.9 0.9 0.9 0.5</ambient>
+          <diffuse>0.9 0.9 0.9 0.5</diffuse>
+          <specular>0.2 0.2 0.2 1.0</specular>
+
+          <!-- PBR 物理渲染 -->
+          <pbr>
+            <metal>
+              <albedo_map>./materials/textures/net.png</albedo_map>              <!-- 球网纹理图 -->
+              <roughness>0.5</roughness>              <!-- 粗糙度：中等 -->
+              <metalness>0.0</metalness>              <!-- 非金属 -->
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+
+    <!-- ============================================== -->
+    <!-- 左侧球网：球门左侧网 -->
+    <!-- ============================================== -->
+    <link name="left_net">
+      <pose>0.25 1.2625 0.7625 0 0 0</pose>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.5 0.01 0.725</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.5 0.01 0.725</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.9 0.9 0.9 0.5</ambient>
+          <diffuse>0.9 0.9 0.9 0.5</diffuse>
+          <specular>0.2 0.2 0.2 1.0</specular>
+          <pbr>
+            <metal>
+              <albedo_map>./materials/textures/net.png</albedo_map>
+              <roughness>0.5</roughness>
+              <metalness>0.0</metalness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+
+    <!-- ============================================== -->
+    <!-- 右侧球网：球门右侧网 -->
+    <!-- ============================================== -->
+    <link name="right_net">
+      <pose>0.25 -1.2625 0.7625 0 0 0</pose>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.5 0.01 0.725</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.5 0.01 0.725</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.9 0.9 0.9 0.5</ambient>
+          <diffuse>0.9 0.9 0.9 0.5</diffuse>
+          <specular>0.2 0.2 0.2 1.0</specular>
+          <pbr>
+            <metal>
+              <albedo_map>./materials/textures/net.png</albedo_map>
+              <roughness>0.5</roughness>
+              <metalness>0.0</metalness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+
+    <!-- ============================================== -->
+    <!-- 上部球网：球门顶部网 -->
+    <!-- ============================================== -->
+    <link name="upper_net">
+      <pose>0.25 0 1.125 0 0 0</pose>
+      <collision name="collision">
+        <geometry>
+          <box>
+            <size>0.5 2.525 0.01</size>
+          </box>
+        </geometry>
+        <!-- 最大碰撞接触点数量 -->
+        <max_contacts>10</max_contacts>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <box>
+            <size>0.5 2.525 0.01</size>
+          </box>
+        </geometry>
+        <material>
+          <ambient>0.9 0.9 0.9 0.5</ambient>
+          <diffuse>0.9 0.9 0.9 0.5</diffuse>
+          <specular>0.2 0.2 0.2 1.0</specular>
+          <pbr>
+            <metal>
+              <albedo_map>./materials/textures/net.png</albedo_map>
+              <roughness>0.5</roughness>
+              <metalness>0.0</metalness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+
+  </model>  <!-- 结束球门模型 -->
+</sdf><!-- 结束SDF -->
