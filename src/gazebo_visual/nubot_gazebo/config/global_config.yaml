@@ -1,0 +1,36 @@
+# Uses ISO units. For example, use 'm' for length.
+general:
+  dribble_distance_thres: 0.4
+  dribble_angle_thres: 20.0
+  noise_stddev: 0.00 # 重命名：高斯噪声标准差 (m)
+  noise_probability: 0.01 # 重命名：每次测量触发噪声的概率 [0,1]
+
+cyan:
+  prefix: "NuBot"
+  num: 5
+  initial_poses: # 新增：替代原 shell 中的 cyan_x/cyan_y 数组
+    - { x: 0.0, y: 0.0, yaw: 0.0 } # GK
+    - { x: -10.5, y: 0.0, yaw: 0.0 } # Defender
+    - { x: -2.0, y: 1.0, yaw: 0.0 } # Mid L
+    - { x: -2.0, y: -1.0, yaw: 0.0 } # Mid R
+    - { x: -5.0, y: 2.0, yaw: 0.0 } # Att L
+    - { x: -5.0, y: -2.0, yaw: 0.0 } # Att R
+
+magenta:
+  prefix: "rival"
+  num: 5
+  initial_poses: # 新增：替代原 shell 中的 magenta_x/magenta_y 数组
+    - { x: 0.0, y: 0.0, yaw: 3.14159 } # GK
+    - { x: 10.5, y: 0.0, yaw: 3.14159 } # Defender
+    - { x: 2.0, y: -1.0, yaw: 3.14159 } # Mid L
+    - { x: 2.0, y: 1.0, yaw: 3.14159 } # Mid R
+    - { x: 5.0, y: -2.0, yaw: 3.14159 } # Att L
+    - { x: 5.0, y: 2.0, yaw: 3.14159 } # Att R
+
+field:
+  length: 22.0 # 改为浮点数，移除 "Use integer!" 限制
+  width: 14.0
+
+football:
+  name: "football"
+  chassis_link: "football::chassis"

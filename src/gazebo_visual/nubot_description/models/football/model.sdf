@@ -1,82 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sdf version="1.11">
 
-   <model name="football">
+    <model name="football">
 
-      <static>false</static>
+        <static>false</static>
 
-      <pose>0 0 0.02 0 0 0</pose>
+        <pose>0 0 0.02 0 0 0</pose>
 
-      <link name="chassis">
+        <link name="chassis">
 
-         <self_collide>false</self_collide>
+            <self_collide>false</self_collide>
 
-         <inertial>
-            <mass>0.41</mass>
+            <inertial>
+                <mass>0.41</mass>
 
-            <inertia>
-               <ixx>3.2e-03</ixx>
-               <iyy>3.2e-03</iyy>
-               <izz>3.2e-03</izz>
-               <ixy>0</ixy>
-               <ixz>0</ixz>
-               <iyz>0</iyz>
-            </inertia>
-         </inertial>
+                <inertia>
+                    <ixx>3.2e-03</ixx>
+                    <iyy>3.2e-03</iyy>
+                    <izz>3.2e-03</izz>
+                    <ixy>0</ixy>
+                    <ixz>0</ixz>
+                    <iyz>0</iyz>
+                </inertia>
+            </inertial>
 
-         <collision name="collision">
+            <collision name="collision">
 
-            <geometry>
-               <sphere>
-                  <radius>0.11</radius>
-               </sphere>
-            </geometry>
+                <geometry>
+                    <sphere>
+                        <radius>0.11</radius>
+                    </sphere>
+                </geometry>
 
-            <surface>
+                <surface>
 
-               <bounce>
-                  <restitution_coefficient>0.05</restitution_coefficient>
-                  <threshold>10</threshold>
-               </bounce>
+                    <bounce>
+                        <restitution_coefficient>0.05</restitution_coefficient>
+                        <threshold>10</threshold>
+                    </bounce>
 
-               <friction>
-                  <torsional>
-                     <coefficient>1.0</coefficient>
-                     <use_patch_radius>true</use_patch_radius>
-                     <patch_radius>0.05</patch_radius>
-                  </torsional>
+                    <friction>
+                        <torsional>
+                            <coefficient>1.0</coefficient>
+                            <use_patch_radius>true</use_patch_radius>
+                            <patch_radius>0.05</patch_radius>
+                        </torsional>
 
-                  <ode>
-                     <mu>1</mu>
-                     <mu2>1</mu2>
-                  </ode>
-               </friction>
+                        <ode>
+                            <mu>1</mu>
+                            <mu2>1</mu2>
+                        </ode>
+                    </friction>
 
-               <contact>
-                  <ode>
-                     <max_vel>5</max_vel>
-                  </ode>
-               </contact>
-            </surface>
-         </collision>
+                    <contact>
+                        <ode>
+                            <max_vel>5</max_vel>
+                        </ode>
+                    </contact>
+                </surface>
+            </collision>
 
-         <visual name="visual">
-            <geometry>
-               <mesh>
-                  <scale>0.11 0.11 0.11</scale>
-                  <uri>file://./meshes/ball.dae</uri>
-               </mesh>
-            </geometry>
-         </visual>
+            <visual name="visual">
+                <geometry>
+                    <mesh>
+                        <scale>0.11 0.11 0.11</scale>
+                        <uri>model://football/meshes/ball.dae</uri>
+                    </mesh>
+                </geometry>
+            </visual>
 
-         <sensor name="contact_sensor" type="contact">
-            <always_on>true</always_on>
-            <update_rate>50</update_rate>
-            <contact>
-               <collision>collision</collision>
-            </contact>
-         </sensor>
+            <sensor name="contact_sensor" type="contact">
+                <always_on>true</always_on>
+                <update_rate>50</update_rate>
+                <contact>
+                    <collision>collision</collision>
+                </contact>
+            </sensor>
 
-      </link>
-   </model>
+        </link>
+    </model>
 </sdf>

@@ -23,7 +23,7 @@
                 <geometry>
                     <mesh>
                         <scale>1.1 1.1 1.4</scale>
-                        <uri>file://meshes/nubot_frame_collision.dae</uri>
+                        <uri>model://nubot1/meshes/nubot_frame_collision.dae</uri>
                     </mesh>
                 </geometry>
                 <surface>
@@ -50,7 +50,7 @@
                 <geometry>
                     <mesh>
                         <scale>1.1 1.1 1.4</scale>
-                        <uri>file://meshes/nubot_frame1.dae</uri>
+                        <uri>model://nubot1/meshes/nubot_frame1.dae</uri>
                     </mesh>
                 </geometry>
             </visual>
