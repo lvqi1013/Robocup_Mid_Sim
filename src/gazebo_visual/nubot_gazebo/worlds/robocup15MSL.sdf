@@ -1,222 +1,298 @@
-<?xml version="1.0" ?>
+<?xml version="1.0"?>
 <!-- XML 版本声明，固定写法 -->
 
 <!-- SDF 根标签：整个仿真文件的最外层
      version：SDF语法版本，1.11适配Gazebo Harmonic/Ionic -->
 <sdf version='1.11'>
 
-  <!-- world：定义一个完整的仿真世界
+    <!-- world：定义一个完整的仿真世界
        name：世界名称，这里是RoboCup15MSL比赛场 -->
-  <world name='RoboCup15MSL'>
+    <world name='RoboCup15MSL'>
 
 
-    <!-- 系统插件：Gazebo 核心功能模块 -->
+        <!-- 系统插件：Gazebo 核心功能模块 -->
 
-    <!-- 物理系统插件：负责物理引擎计算（重力、碰撞、运动） -->
-    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics">
-    </plugin>
+        <!-- 物理系统插件：负责物理引擎计算（重力、碰撞、运动） -->
+        <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics">
+        </plugin>
 
-    <!-- 用户命令插件：响应用户操作（拖动、删除、重置模型） -->
-    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands">
-    </plugin>
+        <!-- 用户命令插件：响应用户操作（拖动、删除、重置模型） -->
+        <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands">
+        </plugin>
 
-    <!-- 场景广播插件：将场景数据同步给GUI、传感器、外部程序 -->
-    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster">
-    </plugin>
-
-
-    <!-- scene：场景视觉全局配置 -->
-
-    <scene>
-      <!-- 环境光：整个世界的基础亮度，暗处也能看到的光 -->
-      <ambient>0.4 0.4 0.4 1</ambient>
-      <!-- 背景色：窗口空白处的颜色（灰色） -->
-      <background>0.7 0.7 0.7 1</background>
-      <!-- 阴影：关闭，提升运行速度，比赛场通常关闭 -->
-      <shadows>false</shadows>
-      <!-- 网格：关闭，不显示地面坐标网格 -->
-      <grid> false </grid>
-    </scene>
+        <!-- 场景广播插件：将场景数据同步给GUI、传感器、外部程序 -->
+        <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster">
+        </plugin>
 
 
-    <!-- spherical_coordinates：球面坐标（GPS/地理坐标系）
+        <!-- scene：场景视觉全局配置 -->
+
+        <scene>
+            <!-- 环境光：整个世界的基础亮度，暗处也能看到的光 -->
+            <ambient>0.4 0.4 0.4 1</ambient>
+            <!-- 背景色：窗口空白处的颜色（灰色） -->
+            <background>0.7 0.7 0.7 1</background>
+            <!-- 阴影：关闭，提升运行速度，比赛场通常关闭 -->
+            <shadows>false</shadows>
+            <!-- 网格：关闭，不显示地面坐标网格 -->
+            <grid> false </grid>
+        </scene>
+
+
+        <!-- spherical_coordinates：球面坐标（GPS/地理坐标系）
          仿真默认使用平面坐标系，这里保持默认即可 -->
 
-    <spherical_coordinates>
-      <surface_model>EARTH_WGS84</surface_model>      <!-- 地球地理模型 -->
-      <latitude_deg>0</latitude_deg>      <!-- 纬度 -->
-      <longitude_deg>0</longitude_deg>      <!-- 经度 -->
-      <elevation>0</elevation>      <!-- 海拔 -->
-      <heading_deg>0</heading_deg>      <!-- 朝向 -->
-    </spherical_coordinates>
+        <spherical_coordinates>
+            <surface_model>EARTH_WGS84</surface_model>      <!-- 地球地理模型 -->
+            <latitude_deg>0</latitude_deg>      <!-- 纬度 -->
+            <longitude_deg>0</longitude_deg>      <!-- 经度 -->
+            <elevation>0</elevation>      <!-- 海拔 -->
+            <heading_deg>0</heading_deg>      <!-- 朝向 -->
+        </spherical_coordinates>
 
 
-    <!-- light：光源，这里是太阳光（平行光） type="directional"：平行光，模拟太阳
+        <!-- light：光源，这里是太阳光（平行光） type="directional"：平行光，模拟太阳
          name：光源名称 -->
 
-    <light type="directional" name="sun">
-      <!-- 是否投射阴影：关闭 -->
-      <cast_shadows>false</cast_shadows>
-      <!-- 光源位置：放在高空 10m 处 -->
-      <pose>0 0 10 0 0 0</pose>
-      <!-- 漫反射光：白色强光 -->
-      <diffuse>0.8 0.8 0.8 1</diffuse>
-      <!-- 高光：反光强度 -->
-      <specular>0.2 0.2 0.2 1</specular>
-      <!-- 光照衰减：远距离不变暗 -->
-      <attenuation>
-        <range>1000</range>
-        <constant>0.9</constant>
-        <linear>0.01</linear>
-        <quadratic>0.001</quadratic>
-      </attenuation>
-      <!-- 光照方向：斜射，模拟真实太阳光 -->
-      <direction>-0.5 0.1 -0.9</direction>
-    </light>
+        <light type="directional" name="sun">
+            <!-- 是否投射阴影：关闭 -->
+            <cast_shadows>false</cast_shadows>
+            <!-- 光源位置：放在高空 10m 处 -->
+            <pose>0 0 10 0 0 0</pose>
+            <!-- 漫反射光：白色强光 -->
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <!-- 高光：反光强度 -->
+            <specular>0.2 0.2 0.2 1</specular>
+            <!-- 光照衰减：远距离不变暗 -->
+            <attenuation>
+                <range>1000</range>
+                <constant>0.9</constant>
+                <linear>0.01</linear>
+                <quadratic>0.001</quadratic>
+            </attenuation>
+            <!-- 光照方向：斜射，模拟真实太阳光 -->
+            <direction>-0.5 0.1 -0.9</direction>
+        </light>
 
 
-    <!-- gui：图形界面窗口设置 -->
+        <!-- gui：图形界面窗口设置 -->
 
-    <gui fullscreen='false'>      <!-- 是否全屏：否 -->
-      <!-- 相机：用户视角 -->
-      <camera name='user_camera'>
-        <!-- 相机初始位置：斜俯视整个场地 -->
-        <pose>0 -16 10 0 0.53 1.57</pose>
-        <!-- 视角控制：轨道模式（可旋转、缩放查看场地） -->
-        <view_controller>orbit</view_controller>
-      </camera>
-    </gui>
-
-
-    <!-- physics：物理引擎核心参数 type="ode"：使用ODE引擎（Gazebo默认） -->
-
-    <physics type="ode">
-      <!-- 最大步长：物理迭代步长0.001秒（高精度） -->
-      <max_step_size>0.001</max_step_size>
-      <!-- 实时因子：1=与现实时间同步 -->
-      <real_time_factor>1.0</real_time_factor>
-      <!-- 每秒更新200次 -->
-      <real_time_update_rate>200</real_time_update_rate>
-      <!-- 重力：Z轴向下 -9.81，模拟地球重力 -->
-      <gravity>0.0 0.0 -9.81</gravity>
-
-      <!-- ODE 物理求解器参数 -->
-      <ode>
-        <solver>
-          <type>quick</type>          <!-- 快速求解器 -->
-          <iterations>50</iterations>          <!-- 迭代次数，越高越稳定 -->
-          <use_dynamic_moi_rescaling>true</use_dynamic_moi_rescaling>
-        </solver>
-        <!-- 碰撞约束参数：防止物体穿透地面 -->
-        <constraints>
-          <contact_max_correcting_vel>0.1</contact_max_correcting_vel>
-          <contact_surface_layer>0.0001</contact_surface_layer>
-        </constraints>
-      </ode>
-    </physics>
+        <gui fullscreen='false'>      <!-- 是否全屏：否 -->
+            <!-- 相机：用户视角 -->
+            <camera name='user_camera'>
+                <!-- 相机初始位置：斜俯视整个场地 -->
+                <pose>0 -16 10 0 0.53 1.57</pose>
+                <!-- 视角控制：轨道模式（可旋转、缩放查看场地） -->
+                <view_controller>orbit</view_controller>
+            </camera>
+        </gui>
 
 
-    <!-- model：地面模型（灰色基础地面）
+        <!-- physics：物理引擎核心参数 type="ode"：使用ODE引擎（Gazebo默认） -->
+
+        <physics type="ode">
+            <!-- 最大步长：物理迭代步长0.001秒（高精度） -->
+            <max_step_size>0.001</max_step_size>
+            <!-- 实时因子：1=与现实时间同步 -->
+            <real_time_factor>1.0</real_time_factor>
+            <!-- 每秒更新200次 -->
+            <real_time_update_rate>200</real_time_update_rate>
+            <!-- 重力：Z轴向下 -9.81，模拟地球重力 -->
+            <gravity>0.0 0.0 -9.81</gravity>
+
+            <!-- ODE 物理求解器参数 -->
+            <ode>
+                <solver>
+                    <type>quick</type>          <!-- 快速求解器 -->
+                    <iterations>50</iterations>          <!-- 迭代次数，越高越稳定 -->
+                    <use_dynamic_moi_rescaling>true</use_dynamic_moi_rescaling>
+                </solver>
+                <!-- 碰撞约束参数：防止物体穿透地面 -->
+                <constraints>
+                    <contact_max_correcting_vel>0.1</contact_max_correcting_vel>
+                    <contact_surface_layer>0.0001</contact_surface_layer>
+                </constraints>
+            </ode>
+        </physics>
+
+
+        <!-- model：地面模型（灰色基础地面）
          作用：提供无限大物理地面，让物体不会掉下去 -->
 
-    <model name='ground_plane'>
-      <!-- 静态：固定不动，不参与运动计算 -->
-      <static>true</static>
+        <model name='ground_plane'>
+            <!-- 静态：固定不动，不参与运动计算 -->
+            <static>true</static>
 
-      <!-- link：地面实体单元 -->
-      <link name='link'>
+            <!-- link：地面实体单元 -->
+            <link name='link'>
 
-        <!-- collision：碰撞体（物理地面） -->
-        <collision name='collision'>
-          <geometry>
-            <!-- plane：无限平面 -->
-            <plane>
-              <normal>0 0 1</normal>              <!-- 朝上 -->
-              <size>100 100</size>              <!-- 视觉大小 -->
-            </plane>
-          </geometry>
+                <!-- collision：碰撞体（物理地面） -->
+                <collision name='collision'>
+                    <geometry>
+                        <!-- plane：无限平面 -->
+                        <plane>
+                            <normal>0 0 1</normal>              <!-- 朝上 -->
+                            <size>100 100</size>              <!-- 视觉大小 -->
+                        </plane>
+                    </geometry>
 
-          <!-- surface：表面物理属性 -->
-          <surface>
-            <friction>
-              <ode>
-                <mu>100</mu>                <!-- 主摩擦 -->
-                <mu2>50</mu2>                <!-- 次摩擦 -->
-              </ode>
-            </friction>
-            <!-- 接触刚度/阻尼：极硬，不塌陷 -->
-            <contact>
-              <ode>
-                <kp>1e15</kp>
-                <kd>1e13</kd>
-              </ode>
-            </contact>
-            <bounce/>
-            <!-- 无弹性 -->
-          </surface>
-          <!-- 最大同时碰撞点：10 -->
-          <max_contacts>10</max_contacts>
-        </collision>
+                    <!-- surface：表面物理属性 -->
+                    <surface>
+                        <friction>
+                            <ode>
+                                <mu>100</mu>                <!-- 主摩擦 -->
+                                <mu2>50</mu2>                <!-- 次摩擦 -->
+                            </ode>
+                        </friction>
+                        <!-- 接触刚度/阻尼：极硬，不塌陷 -->
+                        <contact>
+                            <ode>
+                                <kp>1e15</kp>
+                                <kd>1e13</kd>
+                            </ode>
+                        </contact>
+                        <bounce />
+                        <!-- 无弹性 -->
+                    </surface>
+                    <!-- 最大同时碰撞点：10 -->
+                    <max_contacts>10</max_contacts>
+                </collision>
 
-        <!-- visual：视觉外观 -->
-        <visual name='visual'>
-          <cast_shadows>false</cast_shadows>
-          <geometry>
-            <plane>
-              <normal>0 0 1</normal>
-              <size>100 100</size>
-            </plane>
-          </geometry>
-          <!-- 材质：调用Gazebo自带灰色材质 -->
-          <material>
-            <script>
+                <!-- visual：视觉外观 -->
+                <visual name='visual'>
+                    <cast_shadows>false</cast_shadows>
+                    <geometry>
+                        <plane>
+                            <normal>0 0 1</normal>
+                            <size>100 100</size>
+                        </plane>
+                    </geometry>
+                    <!-- 材质：调用Gazebo自带灰色材质 -->
+                    <material>
+                        <script>
               <uri>file://media/materials/scripts/gazebo.material</uri>
               <name>Gazebo/Grey</name>
             </script>
-          </material>
-        </visual>
+                    </material>
+                </visual>
 
-        <!-- 速度衰减：无 -->
-        <velocity_decay>
-          <linear>0</linear>
-          <angular>0</angular>
-        </velocity_decay>
-        <self_collide>false</self_collide>        <!-- 不自碰撞 -->
-        <kinematic>false</kinematic>        <!-- 非运动学控制 -->
-        <gravity>true</gravity>        <!-- 受重力 -->
-      </link>
-    </model>
+                <!-- 速度衰减：无 -->
+                <velocity_decay>
+                    <linear>0</linear>
+                    <angular>0</angular>
+                </velocity_decay>
+                <self_collide>false</self_collide>        <!-- 不自碰撞 -->
+                <kinematic>false</kinematic>        <!-- 非运动学控制 -->
+                <gravity>true</gravity>        <!-- 受重力 -->
+            </link>
+        </model>
 
 
-    <!-- include：导入外部模型
+        <!-- include：导入外部模型
          作用：把你之前做的足球场加载进来 -->
 
-    <include>
-      <pose>0 0 0 0 0 0</pose>      <!-- 放在场地正中心 -->
-      <uri>model://RoboCup15_MSL_Field</uri>      <!-- 模型路径 -->
-      <name>field</name>      <!-- 模型别名 -->
-      <static>true</static>      <!-- 静态不动 -->
-    </include>
+        <include>
+            <pose>0 0 0 0 0 0</pose>      <!-- 放在场地正中心 -->
+            <uri>model://RoboCup15_MSL_Field</uri>      <!-- 模型路径 -->
+            <name>field</name>      <!-- 模型别名 -->
+            <static>true</static>      <!-- 静态不动 -->
+        </include>
 
 
-    <!-- include：导入左侧球门 -->
+        <!-- include：导入左侧球门 -->
 
-    <include>
-      <pose>-11 0 0.01 0 0 3.14</pose>      <!-- 放在左侧，旋转180度 -->
-      <uri>model://RoboCup15_MSL_Goal</uri>
-      <name>left_goal</name>
-      <static>true</static>
-    </include>
+        <include>
+            <pose>-11 0 0.01 0 0 3.14</pose>      <!-- 放在左侧，旋转180度 -->
+            <uri>model://RoboCup15_MSL_Goal</uri>
+            <name>left_goal</name>
+            <static>true</static>
+        </include>
 
 
-    <!-- include：导入右侧球门 -->
+        <!-- include：导入右侧球门 -->
 
-    <include>
-      <pose>11 0 0.01 0 0 0</pose>      <!-- 放在右侧 -->
-      <uri>model://RoboCup15_MSL_Goal</uri>
-      <name>right_goal</name>
-      <static>true</static>
-    </include>
+        <include>
+            <pose>11 0 0.01 0 0 0</pose>      <!-- 放在右侧 -->
+            <uri>model://RoboCup15_MSL_Goal</uri>
+            <name>right_goal</name>
+            <static>true</static>
+        </include>
 
-  </world>  <!-- 结束世界 -->
+        <include>
+            <pose>0 0 0.12 0 0 0</pose>
+            <uri>model://football/</uri>
+            <name>football</name>
+            <static>false</static>
+        </include>
+
+        <include>
+            <pose>-10.5 0 -0.001036 0 0 0</pose>
+            <uri>model://nubot1</uri>
+            <name>nubot1</name>
+            <static>false</static>
+        </include>
+
+        <include>
+            <pose>-2.0 1.0 -0.001036 0 0 0 </pose>
+            <uri>model://nubot2</uri>
+            <name>nubot2</name>
+            <static>false</static>
+        </include>
+
+        <include>
+            <pose>-2.0 -1.0 -0.001036 0 0 0</pose>
+            <uri>model://nubot3</uri>
+            <name>nubot3</name>
+            <static>false</static>
+        </include>
+
+        <include>
+            <pose>-5.0 2.0 -0.001036 0 0 0</pose>
+            <uri>model://nubot4</uri>
+            <name>nubot4</name>
+            <static>false</static>
+        </include>
+
+        <include>
+            <pose>-5.0 -2.0 -0.001036 0 0 0</pose>
+            <uri>model://nubot5</uri>
+            <name>nubot5</name>
+            <static>false</static>
+        </include>
+
+        <include>
+            <pose>10.5 0 -0.001036 0 0 0</pose>
+            <uri>model://rival1</uri>
+            <name>rival1</name>
+            <static>false</static>
+        </include>
+
+        <include>
+            <pose>2.0 1.0 -0.001036 0 0 0 </pose>
+            <uri>model://rival2</uri>
+            <name>rival2</name>
+            <static>false</static>
+        </include>
+
+        <include>
+            <pose>2.0 -1.0 -0.001036 0 0 0</pose>
+            <uri>model://rival3</uri>
+            <name>rival3</name>
+            <static>false</static>
+        </include>
+
+        <include>
+            <pose>5.0 2.0 -0.001036 0 0 0</pose>
+            <uri>model://rival4</uri>
+            <name>rival4</name>
+            <static>false</static>
+        </include>
+
+        <include>
+            <pose>5.0 -2.0 -0.001036 0 0 0</pose>
+            <uri>model://rival5</uri>
+            <name>rival5</name>
+            <static>false</static>
+        </include>
+    </world>  <!-- 结束世界 -->
 </sdf><!-- 结束SDF -->
