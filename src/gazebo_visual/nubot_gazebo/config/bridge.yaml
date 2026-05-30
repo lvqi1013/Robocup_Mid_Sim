@@ -6,15 +6,14 @@
   gz_type_name: "gz.msgs.Contacts"
   direction: GZ_TO_ROS
 
-# 顺便预留一个：桥接足球的实时位置 (从 Gazebo 到 ROS 2)
+# 桥接足球的实时位置 (从 Gazebo 到 ROS 2)
 - ros_topic_name: "/football/pose"
   gz_topic_name: "/model/football/pose"
   ros_type_name: "geometry_msgs/msg/PoseArray" # 如果你想获取位姿，这是常用的格式
   gz_type_name: "gz.msgs.Pose_V"
   direction: GZ_TO_ROS
-
-- ros_topic_name: "/football/cmd_vel"
-  gz_topic_name: "/model/football/cmd_vel"
-  ros_type_name: "geometry_msgs/msg/Twist"
-  gz_type_name: "gz.msgs.Twist"
-  direction: ROS_TO_GZ
+# - ros_topic_name: "/football/cmd_vel"
+#   gz_topic_name: "/model/football/cmd_vel"
+#   ros_type_name: "geometry_msgs/msg/Twist"
+#   gz_type_name: "gz.msgs.Twist"
+#   direction: ROS_TO_GZ

@@ -23,10 +23,20 @@ def generate_launch_description():
             )
         ]),
         launch_arguments={
-            'gz_args': os.path.join(pkg_share, 'worlds', 'robocup15MSL.sdf'),
+            'gz_args': os.path.join(pkg_share, 'worlds', 'robocup15MSL.sdf') + ' -v 4',
         }.items(),
     )
-
+    
+    bridge_config_path = os.path.join(pkg_share, 'config', 'bridge.yaml')
+    ros_gz_bridge_node = Node(
+        package = "ros_gz_bridge",
+        executable = "parameter_bridge",
+        name = "ros_gz_bridge",
+        output = "screen",
+        parameters = [
+            {"config_file": bridge_config_path},
+            ],
+    )
 
     # ⚠️ 按需添加 ros_gz_bridge 桥接话题
     # bridge = Node(
@@ -39,5 +49,5 @@ def generate_launch_description():
     return LaunchDescription([
         set_env,
         gz_sim,
-        # bridge,
+        ros_gz_bridge_node,
     ])

@@ -91,23 +91,25 @@
 
         <!-- physics：物理引擎核心参数 type="ode"：使用ODE引擎（Gazebo默认） -->
 
-        <physics type="ode">
+        <physics name="default_physics" default="true" type="ode">
+            <!-- 重力：Z轴向下 -9.81，模拟地球重力 -->
+            <gravity>0.0 0.0 -9.81</gravity>
             <!-- 最大步长：物理迭代步长0.001秒（高精度） -->
             <max_step_size>0.001</max_step_size>
             <!-- 实时因子：1=与现实时间同步 -->
             <real_time_factor>1.0</real_time_factor>
             <!-- 每秒更新200次 -->
             <real_time_update_rate>200</real_time_update_rate>
-            <!-- 重力：Z轴向下 -9.81，模拟地球重力 -->
-            <gravity>0.0 0.0 -9.81</gravity>
+
 
             <!-- ODE 物理求解器参数 -->
             <ode>
                 <solver>
                     <type>quick</type>          <!-- 快速求解器 -->
-                    <iterations>50</iterations>          <!-- 迭代次数，越高越稳定 -->
+                    <iters>50</iters>          <!-- 迭代次数，越高越稳定 -->
                     <use_dynamic_moi_rescaling>true</use_dynamic_moi_rescaling>
                 </solver>
+
                 <!-- 碰撞约束参数：防止物体穿透地面 -->
                 <constraints>
                     <contact_max_correcting_vel>0.1</contact_max_correcting_vel>
@@ -227,14 +229,14 @@
         </include>
 
         <include>
-            <pose>-10.5 0 -0.001036 0 0 0</pose>
+            <pose>-10.5 0 0.02 0 0 0</pose>
             <uri>model://nubot1</uri>
             <name>nubot1</name>
             <static>false</static>
         </include>
 
         <include>
-            <pose>-2.0 1.0 -0.001036 0 0 0 </pose>
+            <pose>-2.0 1.0 0.02 0 0 0 </pose>
             <uri>model://nubot2</uri>
             <name>nubot2</name>
             <static>false</static>
@@ -261,36 +263,37 @@
             <static>false</static>
         </include>
 
+
         <include>
-            <pose>10.5 0 -0.001036 0 0 0</pose>
+            <pose>10.5 0 -0.001036 0 0 3.14159</pose>
             <uri>model://rival1</uri>
             <name>rival1</name>
             <static>false</static>
         </include>
 
         <include>
-            <pose>2.0 1.0 -0.001036 0 0 0 </pose>
+            <pose>2.0 1.0 -0.001036 0 0 3.14159 </pose>
             <uri>model://rival2</uri>
             <name>rival2</name>
             <static>false</static>
         </include>
 
         <include>
-            <pose>2.0 -1.0 -0.001036 0 0 0</pose>
+            <pose>2.0 -1.0 -0.001036 0 0 3.14159</pose>
             <uri>model://rival3</uri>
             <name>rival3</name>
             <static>false</static>
         </include>
 
         <include>
-            <pose>5.0 2.0 -0.001036 0 0 0</pose>
+            <pose>5.0 2.0 -0.001036 0 0 3.14159</pose>
             <uri>model://rival4</uri>
             <name>rival4</name>
             <static>false</static>
         </include>
 
         <include>
-            <pose>5.0 -2.0 -0.001036 0 0 0</pose>
+            <pose>5.0 -2.0 -0.001036 0 0 3.14159</pose>
             <uri>model://rival5</uri>
             <name>rival5</name>
             <static>false</static>

@@ -139,24 +139,25 @@
                 </contact>
             </sensor>
 
-            <!-- linear_damping：线速度阻尼系数，模拟空气阻力等，值越大减速越快 -->
-            <linear_damping>0.2</linear_damping>
-            <!-- angular_damping：角速度阻尼系数，模拟滚动阻力等，值越大旋转衰减越快 -->
-            <angular_damping>0.5</angular_damping>
+            <velocity_decay>
+                <linear>0.2</linear>
+                <angular>0.5</angular>
+            </velocity_decay>
 
         </link>
 
-        <!--
-            plugin：Gazebo Sim 系统插件，在仿真循环中扩展模型行为。
-            VelocityControl：允许通过话题对 link 施加线速度/角速度指令（如 /model/football/cmd_vel）。
-            对被动足球通常非必需；若无节点发布速度指令，球仍由常规物理驱动。
-            若仅做物理仿真，可考虑移除此插件以简化模型。
-        -->
         <plugin
-            filename="gz-sim-velocity-control-system"
-            name="gz::sim::systems::VelocityControl">
-            <!-- link_name：被速度控制插件作用的连杆 -->
-            <link_name>chassis</link_name>
+            filename="gz-sim-pose-publisher-system"
+            name="gz::sim::systems::PosePublisher">
+
+            <publish_model_pose>true</publish_model_pose>
+            <publish_link_pose>false</publish_link_pose>
+            <publish_collision_pose>false</publish_collision_pose>
+            <publish_visual_pose>false</publish_visual_pose>
+
+            <use_pose_vector_msg>true</use_pose_vector_msg>
+
+            <update_frequency>50</update_frequency>
         </plugin>
 
     </model>
