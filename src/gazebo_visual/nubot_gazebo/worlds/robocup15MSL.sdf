@@ -191,9 +191,7 @@
         </model>
 
 
-        <!-- include：导入外部模型
-         作用：把你之前做的足球场加载进来 -->
-
+        <!-- include：导入外部模型 作用：加载足球场地 -->
         <include>
             <pose>0 0 0 0 0 0</pose>      <!-- 放在场地正中心 -->
             <uri>model://RoboCup15_MSL_Field</uri>      <!-- 模型路径 -->
@@ -203,9 +201,8 @@
 
 
         <!-- include：导入左侧球门 -->
-
         <include>
-            <pose>-11 0 0.01 0 0 3.14</pose>      <!-- 放在左侧，旋转180度 -->
+            <pose>-11 0 0.001 0 0 3.14</pose>      <!-- 放在左侧，旋转180度 -->
             <uri>model://RoboCup15_MSL_Goal</uri>
             <name>left_goal</name>
             <static>true</static>
@@ -213,14 +210,14 @@
 
 
         <!-- include：导入右侧球门 -->
-
         <include>
-            <pose>11 0 0.01 0 0 0</pose>      <!-- 放在右侧 -->
+            <pose>11 0 0.001 0 0 0</pose>      <!-- 放在右侧 -->
             <uri>model://RoboCup15_MSL_Goal</uri>
             <name>right_goal</name>
             <static>true</static>
         </include>
 
+        <!-- include：导入足球模型 -->
         <include>
             <pose>0 0 0.12 0 0 0</pose>
             <uri>model://football/</uri>
@@ -228,6 +225,7 @@
             <static>false</static>
         </include>
 
+        <!-- include：导入nubot1模型 -->
         <include>
             <pose>-10.5 0 0.02 0 0 0</pose>
             <uri>model://nubot1</uri>
@@ -235,6 +233,7 @@
             <static>false</static>
         </include>
 
+        <!-- include：导入nubot2模型 -->
         <include>
             <pose>-2.0 1.0 0.02 0 0 0 </pose>
             <uri>model://nubot2</uri>
@@ -242,58 +241,65 @@
             <static>false</static>
         </include>
 
+        <!-- include：导入nubot3模型 -->
         <include>
-            <pose>-2.0 -1.0 -0.001036 0 0 0</pose>
+            <pose>-2.0 -1.0 0.02 0 0 0</pose>
             <uri>model://nubot3</uri>
             <name>nubot3</name>
             <static>false</static>
         </include>
 
+        <!-- include：导入nubot4模型 -->
         <include>
-            <pose>-5.0 2.0 -0.001036 0 0 0</pose>
+            <pose>-5.0 2.0 0.02 0 0 0</pose>
             <uri>model://nubot4</uri>
             <name>nubot4</name>
             <static>false</static>
         </include>
 
+        <!-- include：导入nubot5模型 -->
         <include>
-            <pose>-5.0 -2.0 -0.001036 0 0 0</pose>
+            <pose>-5.0 -2.0 0.02 0 0 0</pose>
             <uri>model://nubot5</uri>
             <name>nubot5</name>
             <static>false</static>
         </include>
 
-
+        <!-- include：导入rival1模型 -->
         <include>
-            <pose>10.5 0 -0.001036 0 0 3.14159</pose>
+            <pose>10.5 0 0.02 0 0 3.14159</pose>
             <uri>model://rival1</uri>
             <name>rival1</name>
             <static>false</static>
         </include>
 
+        <!-- include：导入rival2模型 -->
         <include>
-            <pose>2.0 1.0 -0.001036 0 0 3.14159 </pose>
+            <pose>2.0 1.0 0.02 0 0 3.14159 </pose>
             <uri>model://rival2</uri>
             <name>rival2</name>
             <static>false</static>
         </include>
 
+        <!-- include：导入rival3模型 -->
         <include>
-            <pose>2.0 -1.0 -0.001036 0 0 3.14159</pose>
+            <pose>2.0 -1.0 0.02 0 0 3.14159</pose>
             <uri>model://rival3</uri>
             <name>rival3</name>
             <static>false</static>
         </include>
 
+        <!-- include：导入rival4模型 -->
         <include>
-            <pose>5.0 2.0 -0.001036 0 0 3.14159</pose>
+            <pose>5.0 2.0 0.02 0 0 3.14159</pose>
             <uri>model://rival4</uri>
             <name>rival4</name>
             <static>false</static>
         </include>
 
+        <!-- include：导入rival5模型 -->
         <include>
-            <pose>5.0 -2.0 -0.001036 0 0 3.14159</pose>
+            <pose>5.0 -2.0 0.02 0 0 3.14159</pose>
             <uri>model://rival5</uri>
             <name>rival5</name>
             <static>false</static>
