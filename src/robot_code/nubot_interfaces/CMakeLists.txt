@@ -7,9 +7,16 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
+find_package(ament_cmake_python REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
+
+rosidl_generate_interfaces(${PROJECT_NAME}
+  "msg/Point2D.msg"
+  "msg/ActionCmd.msg"
+  "msg/Point3D.msg"
+  "msg/PPoint.msg"
+  "msg/SendingOff.msg"
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
