@@ -1,4 +1,6 @@
-string  team_name            # 队伍名称（"cyan" 或 "magenta"）
-bool    team_info            # 队伍标识（0=cyan, 1=magenta）
-int8    player_num          # 被罚下的球员编号
-int8    id_maxvel_isvalid  # 被罚下后该球员的最大速度设为 0（使其停止运动）
+# 罚下/恢复上场控制信息。
+# 旧注释：0 for cyan, 1 for magenta。
+string team_name              # 队伍或机器人名称；旧字段名 TeamName
+bool team_info                # 队伍标识，旧字段名 TeamInfo
+int16 player_num              # 球员编号，旧字段名 PlayerNum
+int16 id_maxvel_isvalid       # 罚下/恢复标志：id 表示禁用，id+10 表示恢复
