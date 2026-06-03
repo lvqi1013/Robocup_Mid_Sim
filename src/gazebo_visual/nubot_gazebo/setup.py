@@ -29,6 +29,8 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            "dribble_controller = nubot_gazebo.dribble_controller:main",
+            "planar_motion_controller = nubot_gazebo.planar_motion_controller:main",
         ],
     },
 )
