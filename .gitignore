@@ -1,0 +1,54 @@
+# Python 编译缓存
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 环境配置
+.env
+.venv/
+venv/
+ENV/
+env/
+Pipfile.lock
+
+# VSCode、PyCharm 配置
+.vscode/
+.idea/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# 日志文件
+*.log
+
+# 单元测试缓存
+.pytest_cache/
+.tox/
+nosetests.xml
+coverage.xml
+htmlcov/
+
+# mypy 类型检查缓存
+.mypy_cache/
+
+# 运行结果文件
+*.out
+
+# 构建目录
+build/
+dist/
+*.egg-info/
+
+# 数据库文件
+*.sqlite3
+
+# 其他系统文件
+.DS_Store
+Thumbs.db
+
+# 其他自定义文件
+lqcode/
+.gitignore
+simatch/
+install/
+log/
