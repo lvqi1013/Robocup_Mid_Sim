@@ -23,7 +23,7 @@ def generate_launch_description():
             )
         ]),
         launch_arguments={
-            'gz_args': os.path.join(pkg_share, 'worlds', 'robocup15MSL.sdf') + ' -v 4',
+            'gz_args': os.path.join(pkg_share, 'worlds', 'robocup15MSL.sdf') #+ ' -v 4',
         }.items(),
     )
     
@@ -35,6 +35,16 @@ def generate_launch_description():
         output = "screen",
         parameters = [
             {"config_file": bridge_config_path},
+            ],
+    )
+
+    set_pose_service_node = Node(
+        package='ros_gz_bridge',
+        executable='parameter_bridge',
+        name='set_pose',
+        output = 'screen',
+        arguments=[
+                '/world/RoboCup15MSL/set_pose@ros_gz_interfaces/srv/SetEntityPose'
             ],
     )
 
@@ -50,4 +60,5 @@ def generate_launch_description():
         set_env,
         gz_sim,
         ros_gz_bridge_node,
+        set_pose_service_node
     ])

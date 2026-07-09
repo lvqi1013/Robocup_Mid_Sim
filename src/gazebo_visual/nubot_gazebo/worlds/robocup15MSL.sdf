@@ -25,6 +25,11 @@
 
         <plugin filename="gz-sim-contact-system" name="gz::sim::systems::Contact" />
 
+        <plugin
+            filename="libhello_world_plugin.so"
+            name="robocup_mid_sim::HelloWorldPlugin">
+            <message>Gazebo Harmonic plugin loaded successfully.</message>
+        </plugin>
 
         <!-- scene：场景视觉全局配置 -->
 
@@ -88,12 +93,12 @@
             </camera>
         </gui>
 
-
+        <gravity>0.0 0.0 -9.81</gravity>
         <!-- physics：物理引擎核心参数 type="ode"：使用ODE引擎（Gazebo默认） -->
 
         <physics name="default_physics" default="true" type="ode">
             <!-- 重力：Z轴向下 -9.81，模拟地球重力 -->
-            <gravity>0.0 0.0 -9.81</gravity>
+            <!-- <gravity>0.0 0.0 -9.81</gravity> -->
             <!-- 最大步长：物理迭代步长0.001秒（高精度） -->
             <max_step_size>0.001</max_step_size>
             <!-- 实时因子：1=与现实时间同步 -->

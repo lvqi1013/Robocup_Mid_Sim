@@ -20,6 +20,23 @@
   gz_type_name: "gz.msgs.Pose_V"
   direction: GZ_TO_ROS
 
+# 桥接世界位置坐标信息
+- ros_topic_name: "/world/RoboCup15MSL/dynamic_pose/info"
+  gz_topic_name: "/world/RoboCup15MSL/dynamic_pose/info"
+  ros_type_name: "geometry_msgs/msg/PoseArray" # 如果你想获取位姿，这是常用的格式
+  gz_type_name: "gz.msgs.Pose_V"
+  direction: GZ_TO_ROS
+
+# # 桥接set_pose服务
+# - ros_service_name: /world/RoboCup15MSL/set_pose
+#   gz_service_name: /world/RoboCup15MSL/set_pose
+#   ros_type_name: ros_gz_interfaces/srv/SetEntityPose
+#   ros_req_type_name: ros_gz_interfaces/srv/SetEntityPose_Request
+#   ros_rep_type_name: ros_gz_interfaces/srv/SetEntityPose_Response
+#   gz_req_type_name: gz.msgs.Pose
+#   gz_rep_type_name: gz.msgs.Boolean
+#   direction: ROS_TO_GZ
+
 # 桥接nubot1的实时位置(从 Gazebo 到 ROS 2)
 - ros_topic_name: "/nubot1/pose"
   gz_topic_name: "/model/nubot1/pose"
