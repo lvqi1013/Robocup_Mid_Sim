@@ -137,5 +137,13 @@
             <update_frequency>50</update_frequency>
         </plugin>
 
+        <plugin
+            filename="libnubot_plugin.so"
+            name="nubot_plugins::NubotGazebo">
+            <ball_name>football</ball_name>
+            <cyan_prefix>nubot</cyan_prefix>
+            <magenta_prefix>rival</magenta_prefix>
+            <flip_cord>false</flip_cord>
+        </plugin>
     </model>
 </sdf>
