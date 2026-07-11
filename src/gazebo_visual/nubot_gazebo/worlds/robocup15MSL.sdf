@@ -25,11 +25,11 @@
 
         <plugin filename="gz-sim-contact-system" name="gz::sim::systems::Contact" />
 
-        <plugin
+        <!-- <plugin
             filename="libhello_world_plugin.so"
             name="robocup_mid_sim::HelloWorldPlugin">
             <message>Gazebo Harmonic plugin loaded successfully.</message>
-        </plugin>
+        </plugin> -->
 
         <!-- scene：场景视觉全局配置 -->
 

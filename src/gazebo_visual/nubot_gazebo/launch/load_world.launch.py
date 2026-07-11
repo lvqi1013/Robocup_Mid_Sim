@@ -9,11 +9,19 @@ from launch_ros.actions import Node
 def generate_launch_description():
     pkg_share = get_package_share_directory('nubot_gazebo')
     model_share = get_package_share_directory('nubot_description')
+    plugin_share = get_package_share_directory('nubot_plugin')
+    plugin_lib_path = os.path.join(plugin_share, '..', '..', 'lib')
 
     set_env = SetEnvironmentVariable(
         name='GZ_SIM_RESOURCE_PATH',
-        value=f"{model_share}/models:$GZ_SIM_RESOURCE_PATH"
+        value=os.path.join(model_share, "models"),
     )
+
+    set_env2 = SetEnvironmentVariable(
+        name='GZ_SIM_SYSTEM_PLUGIN_PATH',
+        value=plugin_lib_path,
+    )
+
     # 启动 Gazebo Harmonic (gz-sim)
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
@@ -23,7 +31,7 @@ def generate_launch_description():
             )
         ]),
         launch_arguments={
-            'gz_args': os.path.join(pkg_share, 'worlds', 'robocup15MSL.sdf') #+ ' -v 4',
+            'gz_args': os.path.join(pkg_share, 'worlds', 'robocup15MSL.sdf') + ' -v 4',
         }.items(),
     )
     
@@ -48,16 +56,9 @@ def generate_launch_description():
             ],
     )
 
-    # ⚠️ 按需添加 ros_gz_bridge 桥接话题
-    # bridge = Node(
-    #     package='ros_gz_bridge',
-    #     executable='parameter_bridge',
-    #     arguments=['/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock'],
-    #     output='screen',
-    # )
-
     return LaunchDescription([
         set_env,
+        set_env2,
         gz_sim,
         ros_gz_bridge_node,
         set_pose_service_node
