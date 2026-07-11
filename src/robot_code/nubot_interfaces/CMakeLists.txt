@@ -39,5 +39,27 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   DEPENDENCIES geometry_msgs std_msgs
 )
 
+add_library(${PROJECT_NAME}_include INTERFACE)
+
+target_include_directories(${PROJECT_NAME}_include INTERFACE
+  "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>"
+  "$<INSTALL_INTERFACE:include/${PROJECT_NAME}>"
+)
+
+install(DIRECTORY include/
+  DESTINATION include/${PROJECT_NAME}
+  FILES_MATCHING PATTERN "*.hpp" PATTERN "*.h"
+)
+
+install(TARGETS ${PROJECT_NAME}_include
+  EXPORT export_${PROJECT_NAME}_include
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+)
+
+ament_export_targets(export_${PROJECT_NAME}_include  HAS_LIBRARY_TARGET)
+ament_export_include_directories("include/${PROJECT_NAME}")
+
 ament_export_dependencies(rosidl_default_runtime)
 ament_package()
