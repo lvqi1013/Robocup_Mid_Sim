@@ -454,32 +454,32 @@ bool NubotGazebo::update_model_info(const gz::sim::EntityComponentManager &_ecm)
 
 void NubotGazebo::nubot_be_control(gz::sim::EntityComponentManager &_ecm)
 {
-  if (robot_state_.pose.position.Z() < 0.05) {
-    can_move_ = true;
-    if (dribble_req_ && get_is_hold_ball() && match_mode_ != STOPROBOT) {
-      dribble_ball(_ecm);
-      if (!is_dribble_ && dribble_id_client_ && dribble_id_client_->service_is_ready()) {
-        auto request = std::make_shared<nubot_interfaces::srv::DribbleId::Request>();
-        request->agent_id = flip_cord_ ? agent_id_ + 5 : agent_id_;
-        dribble_id_client_->async_send_request(request);
-        is_dribble_ = true;
-      }
-    } else if (is_dribble_) {
-      if (dribble_id_client_ && dribble_id_client_->service_is_ready()) {
-        auto request = std::make_shared<nubot_interfaces::srv::DribbleId::Request>();
-        request->agent_id = -1;
-        dribble_id_client_->async_send_request(request);
-      }
-      is_dribble_ = false;
-    }
+    if (robot_state_.pose.position.Z() < 0.05) {
+        can_move_ = true;
+        if (dribble_req_ && get_is_hold_ball() && match_mode_ != STOPROBOT) {
+        dribble_ball(_ecm);
+        if (!is_dribble_ && dribble_id_client_ && dribble_id_client_->service_is_ready()) {
+            auto request = std::make_shared<nubot_interfaces::srv::DribbleId::Request>();
+            request->agent_id = flip_cord_ ? agent_id_ + 5 : agent_id_;
+            dribble_id_client_->async_send_request(request);
+            is_dribble_ = true;
+        }
+        } else if (is_dribble_) {
+        if (dribble_id_client_ && dribble_id_client_->service_is_ready()) {
+            auto request = std::make_shared<nubot_interfaces::srv::DribbleId::Request>();
+            request->agent_id = -1;
+            dribble_id_client_->async_send_request(request);
+        }
+        is_dribble_ = false;
+        }
 
-    if (shot_req_ && get_is_hold_ball() && match_mode_ != STOPROBOT) {
-      kick_ball(_ecm, mode_, force_);
-      shot_req_ = false;
+        if (shot_req_ && get_is_hold_ball() && match_mode_ != STOPROBOT) {
+        kick_ball(_ecm, mode_, force_);
+        shot_req_ = false;
+        }
+    } else {
+        can_move_ = false;
     }
-  } else {
-    can_move_ = false;
-  }
 }
 
 void NubotGazebo::nubot_locomotion(
