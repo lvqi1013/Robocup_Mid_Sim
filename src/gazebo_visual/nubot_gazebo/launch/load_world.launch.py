@@ -1,9 +1,13 @@
 import os
-import yaml
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, OpaqueFunction, SetEnvironmentVariable
+from launch.actions import (
+    DeclareLaunchArgument,
+    IncludeLaunchDescription,
+    SetEnvironmentVariable,
+)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 def generate_launch_description():
@@ -22,7 +26,18 @@ def generate_launch_description():
         value=plugin_lib_path,
     )
 
-    # 启动 Gazebo Harmonic (gz-sim)
+    render_engine_arg = DeclareLaunchArgument(
+        'render_engine',
+        default_value='ogre2',
+        description=(
+            'Gazebo rendering engine. Use "ogre" as a compatibility fallback '
+            'when Ogre2 cannot compile shaders on the current GPU or VM.'
+        ),
+    )
+    render_engine = LaunchConfiguration('render_engine')
+
+    # 启动 Gazebo Harmonic (gz-sim)。默认使用 Ogre2；遇到虚拟机或显卡
+    # 驱动兼容问题时，可通过 render_engine:=ogre 切换到 Ogre 1.x。
     gz_sim = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             os.path.join(
@@ -31,7 +46,11 @@ def generate_launch_description():
             )
         ]),
         launch_arguments={
-            'gz_args': os.path.join(pkg_share, 'worlds', 'robocup15MSL.sdf') + ' -v 4',
+            'gz_args': [
+                os.path.join(pkg_share, 'worlds', 'robocup15MSL.sdf'),
+                ' -v 4 --render-engine ',
+                render_engine,
+            ],
         }.items(),
     )
     
@@ -57,6 +76,7 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        render_engine_arg,
         set_env,
         set_env2,
         gz_sim,
