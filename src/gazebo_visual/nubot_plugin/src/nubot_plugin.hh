@@ -34,7 +34,7 @@
 #include <nubot_interfaces/srv/dribble_id.hpp>
 
 #include "core.hpp"
-
+#include <gz/transport/Node.hh>
 namespace nubot_plugins
 {
 
@@ -77,77 +77,78 @@ struct Obstacles
   std::vector<nubot::DPoint> world_obs;
 };
 
-class NubotGazebo
-  : public gz::sim::System,
+class NubotGazebo: 
+    public gz::sim::System,
     public gz::sim::ISystemConfigure,
     public gz::sim::ISystemPreUpdate,
     public gz::sim::ISystemPostUpdate
 {
-public:
-  NubotGazebo();
-  ~NubotGazebo() override;
+    public:
+    NubotGazebo();
+    ~NubotGazebo() override;
 
-  void Configure(
-    const gz::sim::Entity &_entity,
-    const std::shared_ptr<const sdf::Element> &_sdf,
-    gz::sim::EntityComponentManager &_ecm,
-    gz::sim::EventManager &_eventMgr) override;
+    void Configure(
+        const gz::sim::Entity &_entity,
+        const std::shared_ptr<const sdf::Element> &_sdf,
+        gz::sim::EntityComponentManager &_ecm,
+        gz::sim::EventManager &_eventMgr) override;
 
-  void PreUpdate(
-    const gz::sim::UpdateInfo &_info,
-    gz::sim::EntityComponentManager &_ecm) override;
+    void PreUpdate(
+        const gz::sim::UpdateInfo &_info,
+        gz::sim::EntityComponentManager &_ecm) override;
 
-  void PostUpdate(
-    const gz::sim::UpdateInfo &_info,
-    const gz::sim::EntityComponentManager &_ecm) override;
+    void PostUpdate(
+        const gz::sim::UpdateInfo &_info,
+        const gz::sim::EntityComponentManager &_ecm) override;
 
-private:
-  void init_ros();
-  void shutdown_ros();
+    private:
+    void init_ros();
+    void shutdown_ros();
 
-  void vel_cmd_cb(const nubot_interfaces::msg::VelCmd::SharedPtr msg);
-  void action_cmd_cb(const nubot_interfaces::msg::ActionCmd::SharedPtr msg);
-  void coach_info_cb(const nubot_interfaces::msg::CoachInfo::SharedPtr msg);
-  void sending_off_cb(const nubot_interfaces::msg::SendingOff::SharedPtr msg);
+    void vel_cmd_cb(const nubot_interfaces::msg::VelCmd::SharedPtr msg);
+    void action_cmd_cb(const nubot_interfaces::msg::ActionCmd::SharedPtr msg);
+    void coach_info_cb(const nubot_interfaces::msg::CoachInfo::SharedPtr msg);
+    void sending_off_cb(const nubot_interfaces::msg::SendingOff::SharedPtr msg);
 
-  void update_entities(const gz::sim::EntityComponentManager &_ecm);
-  bool update_model_info(const gz::sim::EntityComponentManager &_ecm);
-  void nubot_be_control(gz::sim::EntityComponentManager &_ecm);
-  void nubot_locomotion(
-    gz::sim::EntityComponentManager &_ecm,
-    const gz::math::Vector3d &linear_vel_vector,
-    const gz::math::Vector3d &angular_vel_vector);
-  void dribble_ball(gz::sim::EntityComponentManager &_ecm);
-  void kick_ball(gz::sim::EntityComponentManager &_ecm, int mode, double vel);
-  void message_publish();
+    void update_entities(const gz::sim::EntityComponentManager &_ecm);
+    bool update_model_info(const gz::sim::EntityComponentManager &_ecm);
+    void nubot_be_control(gz::sim::EntityComponentManager &_ecm);
+    void nubot_locomotion(
+        gz::sim::EntityComponentManager &_ecm,
+        const gz::math::Vector3d &linear_vel_vector,
+        const gz::math::Vector3d &angular_vel_vector);
+    void dribble_ball(gz::sim::EntityComponentManager &_ecm);
+    void kick_ball(gz::sim::EntityComponentManager &_ecm, int mode, double vel);
+    void message_publish();
 
-  bool get_is_hold_ball();
-  bool get_nubot_stuck();
-  bool is_robot_valid(double x, double y) const;
+    bool get_is_hold_ball();
+    bool get_nubot_stuck();
+    bool is_robot_valid(double x, double y) const;
+    void publish_cmd_vel_zero();
 
-  double noise(double scale, double probability);
-  double signed_angle_pi(gz::math::Vector3d reference, gz::math::Vector3d target) const;
-  gz::math::Vector3d speed_limit(
-    const gz::math::Vector3d &target_linear_vel,
-    const gz::math::Vector3d &target_ang_vel) const;
-  gz::math::Vector3d accelerate_limit(
-    double duration,
-    const gz::math::Vector3d &model_linear_vel,
-    const gz::math::Vector3d &target_linear_vel,
-    const gz::math::Vector3d &model_ang_vel,
-    const gz::math::Vector3d &target_ang_vel) const;
+    double noise(double scale, double probability);
+    double signed_angle_pi(gz::math::Vector3d reference, gz::math::Vector3d target) const;
+    gz::math::Vector3d speed_limit(
+        const gz::math::Vector3d &target_linear_vel,
+        const gz::math::Vector3d &target_ang_vel) const;
+    gz::math::Vector3d accelerate_limit(
+        double duration,
+        const gz::math::Vector3d &model_linear_vel,
+        const gz::math::Vector3d &target_linear_vel,
+        const gz::math::Vector3d &model_ang_vel,
+        const gz::math::Vector3d &target_ang_vel) const;
 
-  template<typename ComponentT, typename DataT>
-  void set_or_create_component(
-    gz::sim::EntityComponentManager &_ecm,
-    gz::sim::Entity _entity,
-    const DataT &_data);
+    template<typename ComponentT, typename DataT>
+    void set_or_create_component(
+        gz::sim::EntityComponentManager &_ecm,
+        gz::sim::Entity _entity,
+        const DataT &_data);
 
-  template<typename T>
-  T sdf_value(
-    const std::shared_ptr<const sdf::Element> &_sdf,
-    const std::string &_name,
-    const T &_default_value) const;
+    template<typename T>
+    T sdf_value(
+        const std::shared_ptr<const sdf::Element> &_sdf,
+        const std::string &_name,
+        const T &_default_value) const;
 
 private:
   gz::sim::Model model_{gz::sim::kNullEntity};
@@ -225,6 +226,10 @@ private:
 
   NubotState state_{CHASE_BALL};
   NubotSubState sub_state_{MOVE_BALL};
+
+    gz::transport::Node gz_node_;
+    gz::transport::Node::Publisher gz_cmd_vel_pub_;
+    gz::transport::Node::Publisher gz_ball_kick_pub_;
 };
 
 }  // namespace nubot_plugins

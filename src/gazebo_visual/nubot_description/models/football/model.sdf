@@ -159,6 +159,20 @@
 
             <update_frequency>50</update_frequency>
         </plugin>
+        <plugin
+            filename="gz-sim-velocity-control-system"
+            name="gz::sim::systems::VelocityControl">
+            <link_name>chassis</link_name>
+        </plugin>
+
+        <plugin
+            filename="libball_gazebo.so"
+            name="nubot_plugins::BallGazebo">
+            <mu>0.5</mu>
+            <gravity>9.8</gravity>
+            <stop_speed>0.05</stop_speed>
+            <max_speed>10.0</max_speed>
+        </plugin>
 
     </model>
 </sdf>

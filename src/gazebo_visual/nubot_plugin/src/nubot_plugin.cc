@@ -15,6 +15,7 @@
 #include <gz/sim/components/LinearVelocity.hh>
 #include <gz/sim/components/AngularVelocity.hh>
 #include <builtin_interfaces/msg/time.hpp>
+#include <gz/msgs/twist.pb.h>
 
 namespace nubot_plugins
 {
@@ -71,74 +72,96 @@ NubotGazebo::~NubotGazebo()
 }
 
 void NubotGazebo::Configure(
-  const gz::sim::Entity &_entity,
-  const std::shared_ptr<const sdf::Element> &_sdf,
-  gz::sim::EntityComponentManager &_ecm,
-  gz::sim::EventManager &)
+    const gz::sim::Entity &_entity,
+    const std::shared_ptr<const sdf::Element> &_sdf,
+    gz::sim::EntityComponentManager &_ecm,
+    gz::sim::EventManager &)
 {
-  model_entity_ = _entity;
-  model_ = gz::sim::Model(_entity);
-  model_name_ = model_.Name(_ecm);
+    model_entity_ = _entity;
+    model_ = gz::sim::Model(_entity);
+    model_name_ = model_.Name(_ecm);
+    gz_cmd_vel_pub_ = gz_node_.Advertise<gz::msgs::Twist>("/model/" + model_name_ + "/cmd_vel");
 
-  ball_name_ = sdf_value<std::string>(_sdf, "ball_name", "football");
-  cyan_pre_ = sdf_value<std::string>(_sdf, "cyan_prefix", "nubot");
-  mag_pre_ = sdf_value<std::string>(_sdf, "magenta_prefix", "rival");
-  dribble_distance_thres_ = sdf_value<double>(_sdf, "dribble_distance_thres", 0.50);
-  dribble_angle_thres_ = sdf_value<double>(_sdf, "dribble_angle_thres", 30.0);
-  field_length_ = sdf_value<double>(_sdf, "field_length", 22.0);
-  field_width_ = sdf_value<double>(_sdf, "field_width", 14.0);
-  noise_scale_ = sdf_value<double>(_sdf, "noise_scale", 0.10);
-  noise_rate_ = sdf_value<double>(_sdf, "noise_rate", 0.01);
-  flip_cord_ = sdf_value<bool>(_sdf, "flip_cord", false);
+    ball_name_ = sdf_value<std::string>(_sdf, "ball_name", "football");
+    cyan_pre_ = sdf_value<std::string>(_sdf, "cyan_prefix", "nubot");
+    mag_pre_ = sdf_value<std::string>(_sdf, "magenta_prefix", "rival");
+    dribble_distance_thres_ = sdf_value<double>(_sdf, "dribble_distance_thres", 0.50);
+    dribble_angle_thres_ = sdf_value<double>(_sdf, "dribble_angle_thres", 30.0);
+    field_length_ = sdf_value<double>(_sdf, "field_length", 22.0);
+    field_width_ = sdf_value<double>(_sdf, "field_width", 14.0);
+    noise_scale_ = sdf_value<double>(_sdf, "noise_scale", 0.10);
+    noise_rate_ = sdf_value<double>(_sdf, "noise_rate", 0.01);
+    flip_cord_ = sdf_value<bool>(_sdf, "flip_cord", false);
+    gz_ball_kick_pub_ = gz_node_.Advertise<gz::msgs::Twist>("/model/" + ball_name_ + "/nubot/kick_velocity");
+    const std::string &prefix = flip_cord_ ? mag_pre_ : cyan_pre_;
+    if (model_name_.rfind(prefix, 0) == 0 && model_name_.size() > prefix.size()) {
+        agent_id_ = std::atoi(model_name_.substr(prefix.size(), 1).c_str());
+    }
 
-  const std::string &prefix = flip_cord_ ? mag_pre_ : cyan_pre_;
-  if (model_name_.rfind(prefix, 0) == 0 && model_name_.size() > prefix.size()) {
-    agent_id_ = std::atoi(model_name_.substr(prefix.size(), 1).c_str());
-  }
+    set_or_create_component<gz::sim::components::LinearVelocity>(
+        _ecm, model_entity_, gz::math::Vector3d::Zero);
+    set_or_create_component<gz::sim::components::AngularVelocity>(
+        _ecm, model_entity_, gz::math::Vector3d::Zero);
 
-  set_or_create_component<gz::sim::components::LinearVelocity>(
-    _ecm, model_entity_, gz::math::Vector3d::Zero);
-  set_or_create_component<gz::sim::components::AngularVelocity>(
-    _ecm, model_entity_, gz::math::Vector3d::Zero);
+    update_entities(_ecm);
+    init_ros();
 
-  update_entities(_ecm);
-  init_ros();
+    RCLCPP_INFO(
+        ros_node_->get_logger(),
+        "%s configured: id=%d flip_cord=%d ball=%s noise=(%f,%f)",
+        model_name_.c_str(), agent_id_, flip_cord_, ball_name_.c_str(), noise_scale_, noise_rate_);
+}
+void NubotGazebo::publish_cmd_vel_zero()
+{
+    gz::msgs::Twist cmd;
 
-  RCLCPP_INFO(
-    ros_node_->get_logger(),
-    "%s configured: id=%d flip_cord=%d ball=%s noise=(%f,%f)",
-    model_name_.c_str(), agent_id_, flip_cord_, ball_name_.c_str(), noise_scale_, noise_rate_);
+    cmd.mutable_linear()->set_x(0.0);
+    cmd.mutable_linear()->set_y(0.0);
+    cmd.mutable_linear()->set_z(0.0);
+
+    cmd.mutable_angular()->set_x(0.0);
+    cmd.mutable_angular()->set_y(0.0);
+    cmd.mutable_angular()->set_z(0.0);
+
+    gz_cmd_vel_pub_.Publish(cmd);
 }
 
 void NubotGazebo::PreUpdate(
-  const gz::sim::UpdateInfo &_info,
-  gz::sim::EntityComponentManager &_ecm)
+    const gz::sim::UpdateInfo &_info,
+    gz::sim::EntityComponentManager &_ecm)
 {
-  if (_info.paused) {
-    return;
-  }
+    if (_info.paused) {
+        return;
+    }
 
-  std::lock_guard<std::mutex> lock(mutex_);
-  update_entities(_ecm);
+    std::lock_guard<std::mutex> lock(mutex_);
+    update_entities(_ecm);
 
-  if (pending_robot_pose_) {
-    set_or_create_component<gz::sim::components::Pose>(
-      _ecm, model_entity_, pending_robot_pose_value_);
-    set_or_create_component<gz::sim::components::LinearVelocity>(
-      _ecm, model_entity_, gz::math::Vector3d::Zero);
-    set_or_create_component<gz::sim::components::AngularVelocity>(
-      _ecm, model_entity_, gz::math::Vector3d::Zero);
-    pending_robot_pose_ = false;
-  }
+    if (pending_robot_pose_) {
+        set_or_create_component<gz::sim::components::Pose>(
+        _ecm, model_entity_, pending_robot_pose_value_);
+        set_or_create_component<gz::sim::components::LinearVelocity>(
+        _ecm, model_entity_, gz::math::Vector3d::Zero);
+        set_or_create_component<gz::sim::components::AngularVelocity>(
+        _ecm, model_entity_, gz::math::Vector3d::Zero);
+        pending_robot_pose_ = false;
+    }
 
-  if (last_command_time_sec_ > 0.0) {
-    nubot_locomotion(
-      _ecm,
-      desired_trans_vector_,
-      desired_rot_vector_);
-  }
 
-  nubot_be_control(_ecm);
+    const double now = ros_node_ ? ros_node_->now().seconds() : 0.0;
+    const bool command_alive = last_command_time_sec_ > 0.0 && (now - last_command_time_sec_) < 0.3;
+
+    if (command_alive) 
+    {
+        nubot_locomotion(_ecm, desired_trans_vector_, desired_rot_vector_);
+    } else {
+        desired_trans_vector_ = gz::math::Vector3d::Zero;
+        desired_rot_vector_ = gz::math::Vector3d::Zero;
+        publish_cmd_vel_zero();  // 或直接在这里发布 zero Twist
+    }
+
+
+    nubot_be_control(_ecm);
 }
 
 void NubotGazebo::PostUpdate(
@@ -483,57 +506,62 @@ void NubotGazebo::nubot_be_control(gz::sim::EntityComponentManager &_ecm)
 }
 
 void NubotGazebo::nubot_locomotion(
-  gz::sim::EntityComponentManager &_ecm,
+  gz::sim::EntityComponentManager &,
   const gz::math::Vector3d &linear_vel_vector,
   const gz::math::Vector3d &angular_vel_vector)
 {
-  static std::vector<double> last_robot_time(10, 0.0);
-  static std::vector<gz::math::Vector3d> last_robot_linear(10, gz::math::Vector3d::Zero);
-  static std::vector<gz::math::Vector3d> last_robot_angular(10, gz::math::Vector3d::Zero);
+    static std::vector<double> last_robot_time(10, 0.0);
+    static std::vector<gz::math::Vector3d> last_robot_linear(10, gz::math::Vector3d::Zero);
+    static std::vector<gz::math::Vector3d> last_robot_angular(10, gz::math::Vector3d::Zero);
 
-  int index = agent_id_ - 1;
-  if (model_name_.rfind(mag_pre_, 0) == 0) {
-    index += 5;
-  }
-  if (index < 0 || index >= static_cast<int>(last_robot_time.size())) {
-    index = 0;
-  }
+    int index = agent_id_ - 1;
+    if (model_name_.rfind(mag_pre_, 0) == 0) {
+        index += 5;
+    }
+    if (index < 0 || index >= static_cast<int>(last_robot_time.size())) {
+        index = 0;
+    }
 
-  const double now = ros_node_ ? ros_node_->now().seconds() : 0.0;
-  const double duration = last_robot_time[index] > 0.0 ? now - last_robot_time[index] : 0.0;
+    const double now = ros_node_ ? ros_node_->now().seconds() : 0.0;
+    const double duration = last_robot_time[index] > 0.0 ? now - last_robot_time[index] : 0.0;
 
-  desired_trans_vector_ = linear_vel_vector;
-  desired_rot_vector_ = angular_vel_vector;
-  desired_trans_vector_.Z() = 0.0;
-  desired_rot_vector_.X() = 0.0;
-  desired_rot_vector_.Y() = 0.0;
+    desired_trans_vector_ = linear_vel_vector;
+    desired_rot_vector_ = angular_vel_vector;
+    desired_trans_vector_.Z() = 0.0;
+    desired_rot_vector_.X() = 0.0;
+    desired_rot_vector_.Y() = 0.0;
 
-  auto result = speed_limit(desired_trans_vector_, desired_rot_vector_);
-  desired_rot_vector_ = result.Dot(gz::math::Vector3d(0, 0, 1)) * gz::math::Vector3d(0, 0, 1);
-  desired_trans_vector_ = result - desired_rot_vector_;
+    auto result = speed_limit(desired_trans_vector_, desired_rot_vector_);
+    desired_rot_vector_ = result.Dot(gz::math::Vector3d(0, 0, 1)) * gz::math::Vector3d(0, 0, 1);
+    desired_trans_vector_ = result - desired_rot_vector_;
 
-  result = accelerate_limit(
-    duration,
-    last_robot_linear[index],
-    desired_trans_vector_,
-    last_robot_angular[index],
-    desired_rot_vector_);
-  desired_rot_vector_ = result.Dot(gz::math::Vector3d(0, 0, 1)) * gz::math::Vector3d(0, 0, 1);
-  desired_trans_vector_ = result - desired_rot_vector_;
+    result = accelerate_limit(
+        duration,
+        last_robot_linear[index],
+        desired_trans_vector_,
+        last_robot_angular[index],
+        desired_rot_vector_);
+    desired_rot_vector_ = result.Dot(gz::math::Vector3d(0, 0, 1)) * gz::math::Vector3d(0, 0, 1);
+    desired_trans_vector_ = result - desired_rot_vector_;
 
-  result = speed_limit(desired_trans_vector_, desired_rot_vector_);
-  desired_rot_vector_ = result.Dot(gz::math::Vector3d(0, 0, 1)) * gz::math::Vector3d(0, 0, 1);
-  desired_trans_vector_ = result - desired_rot_vector_;
+    result = speed_limit(desired_trans_vector_, desired_rot_vector_);
+    desired_rot_vector_ = result.Dot(gz::math::Vector3d(0, 0, 1)) * gz::math::Vector3d(0, 0, 1);
+    desired_trans_vector_ = result - desired_rot_vector_;
 
-  set_or_create_component<gz::sim::components::LinearVelocity>(
-    _ecm, model_entity_, desired_trans_vector_);
-  set_or_create_component<gz::sim::components::AngularVelocity>(
-    _ecm, model_entity_, desired_rot_vector_);
+    gz::msgs::Twist cmd;
+    cmd.mutable_linear()->set_x(desired_trans_vector_.X());
+    cmd.mutable_linear()->set_y(desired_trans_vector_.Y());
+    cmd.mutable_linear()->set_z(0.0);
+    cmd.mutable_angular()->set_x(0.0);
+    cmd.mutable_angular()->set_y(0.0);
+    cmd.mutable_angular()->set_z(desired_rot_vector_.Z());
 
-  judge_nubot_stuck_ = true;
-  last_robot_linear[index] = desired_trans_vector_;
-  last_robot_angular[index] = desired_rot_vector_;
-  last_robot_time[index] = now;
+    gz_cmd_vel_pub_.Publish(cmd);
+
+    judge_nubot_stuck_ = true;
+    last_robot_linear[index] = desired_trans_vector_;
+    last_robot_angular[index] = desired_rot_vector_;
+    last_robot_time[index] = now;
 }
 
 void NubotGazebo::dribble_ball(gz::sim::EntityComponentManager &_ecm)
@@ -555,30 +583,42 @@ void NubotGazebo::dribble_ball(gz::sim::EntityComponentManager &_ecm)
   ball_state_.twist.linear = robot_state_.twist.linear;
 }
 
-void NubotGazebo::kick_ball(gz::sim::EntityComponentManager &_ecm, int mode, double vel)
+void NubotGazebo::kick_ball(gz::sim::EntityComponentManager &, int mode, double vel)
 {
   if (ball_entity_ == gz::sim::kNullEntity) {
     return;
   }
 
-  const gz::math::Vector3d kick_vector_planar(kick_vector_world_.X(), kick_vector_world_.Y(), 0.0);
-  gz::math::Vector3d vel_vector{0, 0, 0};
+  gz::math::Vector3d kick_vector_planar(kick_vector_world_.X(), kick_vector_world_.Y(), 0.0);
+  if (kick_vector_planar.Length() < 1e-9) {
+    kick_vector_planar = gz::math::Vector3d(1, 0, 0);
+  } else {
+    kick_vector_planar.Normalize();
+  }
 
+  gz::math::Vector3d vel_vector{0, 0, 0};
   if (mode == RUN) {
-    double vel2 = std::min(vel, 10.0);
+    const double vel2 = std::min(vel, 10.0);
     vel_vector = (flip_cord_ ? -kick_vector_planar : kick_vector_planar) * vel2;
   } else if (mode == FLY) {
-    double vx = vel;
+    const double vx = std::min(vel, 10.0);
     vel_vector = flip_cord_ ?
-      gz::math::Vector3d(-0.8 * vx * kick_vector_world_.X(), -0.8 * vx * kick_vector_world_.Y(), 0.6 * vx) :
-      gz::math::Vector3d(0.8 * vx * kick_vector_world_.X(), 0.8 * vx * kick_vector_world_.Y(), 0.6 * vx);
+      gz::math::Vector3d(-0.8 * vx * kick_vector_planar.X(), -0.8 * vx * kick_vector_planar.Y(), 0.6 * vx) :
+      gz::math::Vector3d(0.8 * vx * kick_vector_planar.X(), 0.8 * vx * kick_vector_planar.Y(), 0.6 * vx);
   } else {
     RCLCPP_ERROR(ros_node_->get_logger(), "%s kick_ball(): incorrect mode", model_name_.c_str());
     return;
   }
 
-  set_or_create_component<gz::sim::components::LinearVelocity>(
-    _ecm, ball_entity_, vel_vector);
+  gz::msgs::Twist cmd;
+  cmd.mutable_linear()->set_x(vel_vector.X());
+  cmd.mutable_linear()->set_y(vel_vector.Y());
+  cmd.mutable_linear()->set_z(vel_vector.Z());
+  cmd.mutable_angular()->set_x(0.0);
+  cmd.mutable_angular()->set_y(0.0);
+  cmd.mutable_angular()->set_z(0.0);
+
+  gz_ball_kick_pub_.Publish(cmd);
 }
 
 void NubotGazebo::message_publish()
