@@ -10,7 +10,7 @@
 
 ```bash
 source /opt/ros/jazzy/setup.bash
-colcon build --symlink-install
+colcon build
 ```
 
 编译完成后加载工作空间环境：
@@ -25,10 +25,10 @@ source install/setup.bash
 
 项目提供两套 Gazebo 启动文件：
 
-| 启动模式 | Launch 文件 | 渲染器 | 使用场景 |
-| --- | --- | --- | --- |
-| GPU 模式（默认） | `load_world_gpu.launch.py` | Ogre2 | 正常支持 GPU/OpenGL 渲染的设备 |
-| CPU/兼容模式 | `load_world_cpu.launch.py` | Ogre 1.x | Ogre2 无法渲染、Shader 编译失败或 Gazebo 闪退时 |
+| 启动模式         | Launch 文件                | 渲染器   | 使用场景                                        |
+| ---------------- | -------------------------- | -------- | ----------------------------------------------- |
+| GPU 模式（默认） | `load_world_gpu.launch.py` | Ogre2    | 正常支持 GPU/OpenGL 渲染的设备                  |
+| CPU/兼容模式     | `load_world_cpu.launch.py` | Ogre 1.x | Ogre2 无法渲染、Shader 编译失败或 Gazebo 闪退时 |
 
 ### 2.1 默认启动：GPU 模式
 
