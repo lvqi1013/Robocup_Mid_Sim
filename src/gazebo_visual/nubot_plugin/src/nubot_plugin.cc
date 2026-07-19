@@ -272,30 +272,63 @@ void NubotGazebo::shutdown_ros()
   ros_context_.reset();
 }
 
+/**
+ * @brief ROS2 速度指令回调函数：负责坐标系转换
+ * 
+ * 将上层决策/导航节点发送的 VelCmd（机器人本体坐标系，cm/s）
+ * 转换为 Gazebo VelocityControl 插件所需的世界坐标系速度矢量（m/s），
+ * 
+ * @param msg 速度指令消息，包含 vx/vy (cm/s) 和 w (rad/s)
+ */
 void NubotGazebo::vel_cmd_cb(const nubot_interfaces::msg::VelCmd::SharedPtr msg)
 {
-  std::lock_guard<std::mutex> lock(mutex_);
-  if (flip_cord_) {
-    vx_cmd_ = -msg->vx * CM2M_CONVERSION;
-    vy_cmd_ = -msg->vy * CM2M_CONVERSION;
-  } else {
-    vx_cmd_ = msg->vx * CM2M_CONVERSION;
-    vy_cmd_ = msg->vy * CM2M_CONVERSION;
-  }
-  w_cmd_ = msg->w;
+    //加锁保护共享变量，因为此回调在 ROS2 executor 线程中执行，而 PreUpdate/nubot_locomotion 在 Gazebo 仿真线程中读取这些变量
+    std::lock_guard<std::mutex> lock(mutex_);
 
-  gz::math::Vector3d forward = kick_vector_world_;
-  forward.Z() = 0.0;
-  if (forward.Length() < 1e-9) {
-    forward = {1, 0, 0};
-  } else {
-    forward.Normalize();
-  }
+    // ========== 1. 单位转换 + 坐标翻转 ==========
+    // VelCmd 的 vx/vy 单位为 cm/s，需乘以 0.01 转为 m/s（Gazebo 使用 SI 单位）
+    // flip_cord_ 为 true 时表示该机器人为对手（magenta），
 
-  const gz::math::Vector3d lateral = gz::math::Vector3d(0, 0, 1).Cross(forward);
-  desired_trans_vector_ = vx_cmd_ * forward + vy_cmd_ * lateral;
-  desired_rot_vector_ = gz::math::Vector3d(0, 0, w_cmd_);
-  last_command_time_sec_ = ros_node_ ? ros_node_->now().seconds() : 0.0;
+    if (flip_cord_) {
+        vx_cmd_ = -msg->vx * CM2M_CONVERSION;
+        vy_cmd_ = -msg->vy * CM2M_CONVERSION;
+    } else {
+        vx_cmd_ = msg->vx * CM2M_CONVERSION;    // cm/s → m/s
+        vy_cmd_ = msg->vy * CM2M_CONVERSION;    // cm/s → m/s
+    }
+    w_cmd_ = msg->w; // 角速度赋值
+
+
+    // ========== 2. 获取机器人当前朝向（世界坐标系下的前方矢量）==========
+    // kick_vector_world_ 是机器人本体 x 轴在世界坐标系中的方向，
+    gz::math::Vector3d forward = kick_vector_world_;
+    forward.Z() = 0.0;
+
+    // 安全兜底：如果朝向矢量退化（如初始化时位姿尚未更新），默认使用世界坐标系 X 轴正方向作为前方
+    if (forward.Length() < 1e-9) {
+        forward = {1, 0, 0};
+    } else {
+        forward.Normalize();
+    }
+
+    // ========== 3. 构建本体坐标系的横向基矢量 ==========
+    // 通过叉乘得到垂直于 forward 的横向矢量（本体 y 轴在世界系中的投影）
+    // Z 轴 × 前方 = 左方（右手坐标系下，lateral 指向机器人左侧）
+
+    const gz::math::Vector3d lateral = gz::math::Vector3d(0, 0, 1).Cross(forward);
+
+    // ========== 4. 将本体速度分解到世界坐标系 ==========
+    // VelCmd 中的 vx/vy 是相对于机器人本体的前后/左右速度，
+    // 但 Gazebo 的 VelocityControl 插件期望的是世界坐标系下的绝对速度矢量
+    // 因此需要用当前朝向基矢量做线性组合：
+    //   世界速度 = vx * 前方单位矢量 + vy * 左方单位矢量
+    desired_trans_vector_ = vx_cmd_ * forward + vy_cmd_ * lateral;
+
+    // 角速度直接赋值到 Z 轴（平面旋转只有 Z 分量）
+    desired_rot_vector_ = gz::math::Vector3d(0, 0, w_cmd_);
+
+    // ========== 5. 记录最后有效指令时间戳 ==========
+    last_command_time_sec_ = ros_node_ ? ros_node_->now().seconds() : 0.0;
 }
 
 void NubotGazebo::action_cmd_cb(const nubot_interfaces::msg::ActionCmd::SharedPtr msg)

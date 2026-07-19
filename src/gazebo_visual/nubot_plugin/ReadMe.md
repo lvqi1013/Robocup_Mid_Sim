@@ -1,3 +1,25 @@
+# 关于机器人速度的执行过程
+
+```bash
+vel_cmd_cb() 接收指令
+    ↓
+PreUpdate() → nubot_locomotion()
+    ↓
+① speed_limit()          ← 第一次轮速上限截断
+    ↓
+② accelerate_limit()     ← 加/减速度截断
+    ↓
+③ speed_limit()          ← 第二次轮速上限截断（兜底）
+    ↓
+发布到 /model/nubotX/cmd_vel → VelocityControl 系统执行
+```
+
+由路线可以知道：调试机器人移动，发布指令为(自行替换各种值就行)
+
+```bash
+ros2 topic pub /nubot1/nubotcontrol/velcmd   nubot_interfaces/msg/VelCmd   "{vx: 0.0, vy: 0.0, w: 0.0}"   --rate 50
+```
+
 /\*\*
 
 - @brief 仿真运动学限制参数类
