@@ -16,9 +16,17 @@ def generate_launch_description():
 
     # world_model 部分
     launch_world_model = LaunchConfiguration('launch_world_model') # 用来引用名为 'launch_world_model' 的启动参数（Launch Argument）的实时数值。
-    team_prefix = LaunchConfiguration('team_prefix') # nubot or rival用于不同方启动
-    team_size = LaunchConfiguration('team_size')
+    team_prefix = LaunchConfiguration('team_prefix') # nubot or rival用于不同方启动 simulation interface alse
+    team_size = LaunchConfiguration('team_size')# simulation interface alse
 
+    # simulation interface part
+    launch_simulation_interface = LaunchConfiguration('launch_simulation_interface')
+    match_mode = LaunchConfiguration('match_mode')
+    match_type = LaunchConfiguration('match_type')
+    test_mode = LaunchConfiguration('test_mode')
+
+    # nubot_control部分
+    # launch_nubot_control = LaunchConfiguration('launch_nubot_control')
 
     set_env = SetEnvironmentVariable(
         name='GZ_SIM_RESOURCE_PATH',
@@ -81,11 +89,51 @@ def generate_launch_description():
         condition=IfCondition(launch_world_model),
     )
 
+    simulation_interface_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            os.path.join(
+                get_package_share_directory('simulation_interface'),
+                'launch', 'simulation_interface.launch.py'
+            )
+        ]),
+        launch_arguments={
+            'team_prefix': team_prefix,
+            'team_size': team_size,
+            'match_mode': match_mode,
+            'match_type': match_type,
+            'test_mode': test_mode,
+        }.items(),
+        condition=IfCondition(launch_simulation_interface),
+    )
+
+    # nubot_control_launch = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource([
+    #         os.path.join(
+    #             get_package_share_directory('nubot_control'),
+    #             'launch', 'minimal_control.launch.py'
+    #         )
+    #     ]),
+    #     launch_arguments={
+    #         'team_prefix': team_prefix,
+    #         'team_size': team_size,
+    #     }.items(),
+    #     condition=IfCondition(launch_nubot_control),
+    # )
+
     return LaunchDescription([
         # world model part
         DeclareLaunchArgument('launch_world_model', default_value='true'),
         DeclareLaunchArgument('team_prefix', default_value='nubot'),
         DeclareLaunchArgument('team_size', default_value='5'),
+
+        # simulation interface
+        DeclareLaunchArgument('launch_simulation_interface', default_value='true'),
+        DeclareLaunchArgument('match_mode', default_value='0'),
+        DeclareLaunchArgument('match_type', default_value='0'),
+        DeclareLaunchArgument('test_mode', default_value='0'),
+
+        # nubot control
+        # DeclareLaunchArgument('launch_nubot_control', default_value='true'),
 
         # launch gazebo part
         set_env,
@@ -94,6 +142,9 @@ def generate_launch_description():
         ros_gz_bridge_node,
         set_pose_service_node,
 
+        simulation_interface_launch,
+        # world model part
         world_model_launch,
+        # nubot_control_launch,
 
     ])
