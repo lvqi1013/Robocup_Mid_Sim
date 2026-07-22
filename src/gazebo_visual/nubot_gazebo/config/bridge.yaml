@@ -107,72 +107,72 @@
   gz_type_name: "gz.msgs.Pose_V"
   direction: GZ_TO_ROS
 
-# 桥接nubot1的速度(从 Gazebo 到 ROS 2)
-- ros_topic_name: "/nubot1/cmd_vel"
-  gz_topic_name: "/model/nubot1/cmd_vel"
-  ros_type_name: "geometry_msgs/msg/Twist"
-  gz_type_name: "gz.msgs.Twist"
-  direction: ROS_TO_GZ
+# # 桥接nubot1的速度(从 Gazebo 到 ROS 2)
+# - ros_topic_name: "/nubot1/cmd_vel"
+#   gz_topic_name: "/model/nubot1/cmd_vel"
+#   ros_type_name: "geometry_msgs/msg/Twist"
+#   gz_type_name: "gz.msgs.Twist"
+#   direction: ROS_TO_GZ
 
-# 桥接nubot2的速度(从 Gazebo 到 ROS 2)
-- ros_topic_name: "/nubot2/cmd_vel"
-  gz_topic_name: "/model/nubot2/cmd_vel"
-  ros_type_name: "geometry_msgs/msg/Twist"
-  gz_type_name: "gz.msgs.Twist"
-  direction: ROS_TO_GZ
+# # 桥接nubot2的速度(从 Gazebo 到 ROS 2)
+# - ros_topic_name: "/nubot2/cmd_vel"
+#   gz_topic_name: "/model/nubot2/cmd_vel"
+#   ros_type_name: "geometry_msgs/msg/Twist"
+#   gz_type_name: "gz.msgs.Twist"
+#   direction: ROS_TO_GZ
 
-# 桥接nubot3的速度(从 Gazebo 到 ROS 2)
-- ros_topic_name: "/nubot3/cmd_vel"
-  gz_topic_name: "/model/nubot3/cmd_vel"
-  ros_type_name: "geometry_msgs/msg/Twist"
-  gz_type_name: "gz.msgs.Twist"
-  direction: ROS_TO_GZ
+# # 桥接nubot3的速度(从 Gazebo 到 ROS 2)
+# - ros_topic_name: "/nubot3/cmd_vel"
+#   gz_topic_name: "/model/nubot3/cmd_vel"
+#   ros_type_name: "geometry_msgs/msg/Twist"
+#   gz_type_name: "gz.msgs.Twist"
+#   direction: ROS_TO_GZ
 
-# 桥接nubot4的速度(从 Gazebo 到 ROS 2)
-- ros_topic_name: "/nubot4/cmd_vel"
-  gz_topic_name: "/model/nubot4/cmd_vel"
-  ros_type_name: "geometry_msgs/msg/Twist"
-  gz_type_name: "gz.msgs.Twist"
-  direction: ROS_TO_GZ
+# # 桥接nubot4的速度(从 Gazebo 到 ROS 2)
+# - ros_topic_name: "/nubot4/cmd_vel"
+#   gz_topic_name: "/model/nubot4/cmd_vel"
+#   ros_type_name: "geometry_msgs/msg/Twist"
+#   gz_type_name: "gz.msgs.Twist"
+#   direction: ROS_TO_GZ
 
-# 桥接nubot5的速度(从 Gazebo 到 ROS 2)
-- ros_topic_name: "/nubot5/cmd_vel"
-  gz_topic_name: "/model/nubot5/cmd_vel"
-  ros_type_name: "geometry_msgs/msg/Twist"
-  gz_type_name: "gz.msgs.Twist"
-  direction: ROS_TO_GZ
+# # 桥接nubot5的速度(从 Gazebo 到 ROS 2)
+# - ros_topic_name: "/nubot5/cmd_vel"
+#   gz_topic_name: "/model/nubot5/cmd_vel"
+#   ros_type_name: "geometry_msgs/msg/Twist"
+#   gz_type_name: "gz.msgs.Twist"
+#   direction: ROS_TO_GZ
 
-# 桥接rival1的速度(从 Gazebo 到 ROS 2)
-- ros_topic_name: "/rival1/cmd_vel"
-  gz_topic_name: "/model/rival1/cmd_vel"
-  ros_type_name: "geometry_msgs/msg/Twist"
-  gz_type_name: "gz.msgs.Twist"
-  direction: ROS_TO_GZ
+# # 桥接rival1的速度(从 Gazebo 到 ROS 2)
+# - ros_topic_name: "/rival1/cmd_vel"
+#   gz_topic_name: "/model/rival1/cmd_vel"
+#   ros_type_name: "geometry_msgs/msg/Twist"
+#   gz_type_name: "gz.msgs.Twist"
+#   direction: ROS_TO_GZ
 
-# 桥接rival2的速度(从 Gazebo 到 ROS 2)
-- ros_topic_name: "/rival2/cmd_vel"
-  gz_topic_name: "/model/rival2/cmd_vel"
-  ros_type_name: "geometry_msgs/msg/Twist"
-  gz_type_name: "gz.msgs.Twist"
-  direction: ROS_TO_GZ
+# # 桥接rival2的速度(从 Gazebo 到 ROS 2)
+# - ros_topic_name: "/rival2/cmd_vel"
+#   gz_topic_name: "/model/rival2/cmd_vel"
+#   ros_type_name: "geometry_msgs/msg/Twist"
+#   gz_type_name: "gz.msgs.Twist"
+#   direction: ROS_TO_GZ
 
-# 桥接rival3的速度(从 Gazebo 到 ROS 2)
-- ros_topic_name: "/rival3/cmd_vel"
-  gz_topic_name: "/model/rival3/cmd_vel"
-  ros_type_name: "geometry_msgs/msg/Twist"
-  gz_type_name: "gz.msgs.Twist"
-  direction: ROS_TO_GZ
+# # 桥接rival3的速度(从 Gazebo 到 ROS 2)
+# - ros_topic_name: "/rival3/cmd_vel"
+#   gz_topic_name: "/model/rival3/cmd_vel"
+#   ros_type_name: "geometry_msgs/msg/Twist"
+#   gz_type_name: "gz.msgs.Twist"
+#   direction: ROS_TO_GZ
 
-# 桥接rival4的速度(从 Gazebo 到 ROS 2)
-- ros_topic_name: "/rival4/cmd_vel"
-  gz_topic_name: "/model/rival4/cmd_vel"
-  ros_type_name: "geometry_msgs/msg/Twist"
-  gz_type_name: "gz.msgs.Twist"
-  direction: ROS_TO_GZ
+# # 桥接rival4的速度(从 Gazebo 到 ROS 2)
+# - ros_topic_name: "/rival4/cmd_vel"
+#   gz_topic_name: "/model/rival4/cmd_vel"
+#   ros_type_name: "geometry_msgs/msg/Twist"
+#   gz_type_name: "gz.msgs.Twist"
+#   direction: ROS_TO_GZ
 
-# 桥接rival5的速度(从 Gazebo 到 ROS 2)
-- ros_topic_name: "/rival5/cmd_vel"
-  gz_topic_name: "/model/rival5/cmd_vel"
-  ros_type_name: "geometry_msgs/msg/Twist"
-  gz_type_name: "gz.msgs.Twist"
-  direction: ROS_TO_GZ
+# # 桥接rival5的速度(从 Gazebo 到 ROS 2)
+# - ros_topic_name: "/rival5/cmd_vel"
+#   gz_topic_name: "/model/rival5/cmd_vel"
+#   ros_type_name: "geometry_msgs/msg/Twist"
+#   gz_type_name: "gz.msgs.Twist"
+#   direction: ROS_TO_GZ
