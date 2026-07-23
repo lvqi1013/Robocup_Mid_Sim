@@ -25,6 +25,9 @@ def generate_launch_description():
     match_type = LaunchConfiguration('match_type')
     test_mode = LaunchConfiguration('test_mode')
 
+    # # auto referee
+    # launch_auto_referee = LaunchConfiguration('launch_auto_referee')
+
     # nubot_control部分
     # launch_nubot_control = LaunchConfiguration('launch_nubot_control')
 
@@ -106,6 +109,20 @@ def generate_launch_description():
         condition=IfCondition(launch_simulation_interface),
     )
 
+    # auto_referee_launch = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource([
+    #         os.path.join(
+    #             get_package_share_directory('auto_referee'),
+    #             'launch', 'auto_referee.launch.py'
+    #         )
+    #     ]),
+    #     launch_arguments={
+    #         'cyan_prefix': team_prefix,
+    #         'team_size': team_size,
+    #     }.items(),
+    #     condition=IfCondition(launch_auto_referee),
+    # )
+
     # nubot_control_launch = IncludeLaunchDescription(
     #     PythonLaunchDescriptionSource([
     #         os.path.join(
@@ -131,6 +148,8 @@ def generate_launch_description():
         DeclareLaunchArgument('match_mode', default_value='0'),
         DeclareLaunchArgument('match_type', default_value='0'),
         DeclareLaunchArgument('test_mode', default_value='0'),
+        # auto_referee replaces coach_bridge as the authoritative command source.
+        DeclareLaunchArgument('launch_auto_referee', default_value='true'),
 
         # nubot control
         # DeclareLaunchArgument('launch_nubot_control', default_value='true'),
@@ -143,6 +162,7 @@ def generate_launch_description():
         set_pose_service_node,
 
         simulation_interface_launch,
+        # auto_referee_launch,
         # world model part
         world_model_launch,
         # nubot_control_launch,
