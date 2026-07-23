@@ -28,8 +28,9 @@ def generate_launch_description():
     # # auto referee
     # launch_auto_referee = LaunchConfiguration('launch_auto_referee')
 
-    # nubot_control部分
-    # launch_nubot_control = LaunchConfiguration('launch_nubot_control')
+    # 比赛策略与 ActionCmd -> VelCmd 控制链
+    launch_nubot_control = LaunchConfiguration('launch_nubot_control')
+    launch_hwcontroller = LaunchConfiguration('launch_hwcontroller')
 
     set_env = SetEnvironmentVariable(
         name='GZ_SIM_RESOURCE_PATH',
@@ -123,19 +124,33 @@ def generate_launch_description():
     #     condition=IfCondition(launch_auto_referee),
     # )
 
-    # nubot_control_launch = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource([
-    #         os.path.join(
-    #             get_package_share_directory('nubot_control'),
-    #             'launch', 'minimal_control.launch.py'
-    #         )
-    #     ]),
-    #     launch_arguments={
-    #         'team_prefix': team_prefix,
-    #         'team_size': team_size,
-    #     }.items(),
-    #     condition=IfCondition(launch_nubot_control),
-    # )
+    nubot_control_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            os.path.join(
+                get_package_share_directory('nubot_control'),
+                'launch', 'nubot_control.launch.py'
+            )
+        ]),
+        launch_arguments={
+            'team_prefix': team_prefix,
+            'team_size': team_size,
+        }.items(),
+        condition=IfCondition(launch_nubot_control),
+    )
+
+    hwcontroller_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            os.path.join(
+                get_package_share_directory('nubot_hwcontroller'),
+                'launch', 'nubot_hwcontroller.launch.py'
+            )
+        ]),
+        launch_arguments={
+            'team_prefix': team_prefix,
+            'team_size': team_size,
+        }.items(),
+        condition=IfCondition(launch_hwcontroller),
+    )
 
     return LaunchDescription([
         # world model part
@@ -151,8 +166,9 @@ def generate_launch_description():
         # auto_referee replaces coach_bridge as the authoritative command source.
         DeclareLaunchArgument('launch_auto_referee', default_value='true'),
 
-        # nubot control
-        # DeclareLaunchArgument('launch_nubot_control', default_value='true'),
+        # nubot_control 输出 ActionCmd，nubot_hwcontroller 输出 VelCmd。
+        DeclareLaunchArgument('launch_nubot_control', default_value='true'),
+        DeclareLaunchArgument('launch_hwcontroller', default_value='true'),
 
         # launch gazebo part
         set_env,
@@ -165,6 +181,7 @@ def generate_launch_description():
         # auto_referee_launch,
         # world model part
         world_model_launch,
-        # nubot_control_launch,
+        nubot_control_launch,
+        hwcontroller_launch,
 
     ])

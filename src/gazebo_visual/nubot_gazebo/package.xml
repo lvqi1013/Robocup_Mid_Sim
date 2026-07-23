@@ -10,10 +10,14 @@
   <buildtool_depend>ament_python</buildtool_depend>
   <exec_depend>auto_referee</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>nubot_control</exec_depend>
+  <exec_depend>nubot_hwcontroller</exec_depend>
   <exec_depend>rclpy</exec_depend>
   <exec_depend>ros_gz_interfaces</exec_depend>
   <exec_depend>std_msgs</exec_depend>
   <exec_depend>tf2_msgs</exec_depend>
+  <exec_depend>simulation_interface</exec_depend>
+  <exec_depend>world_model</exec_depend>
 
   <export>
     <build_type>ament_python</build_type>
